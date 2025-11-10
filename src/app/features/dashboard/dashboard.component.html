@@ -1,5 +1,8 @@
 <div class="dashboard-container">
-  <h1>Dashboard</h1>
+  <div class="dashboard-header">
+    <h1>Dashboard</h1>
+    <span class="version-tag">v{{ version }}</span>
+  </div>
   
   <div class="stats-grid">
     <mat-card *ngFor="let stat of stats" class="stat-card">
