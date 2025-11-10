@@ -1,0 +1,91 @@
+<div class="historico-container">
+  <div class="page-header">
+    <h1>Histórico de Asignaciones</h1>
+    <div class="actions">
+      <button mat-raised-button (click)="exportarCsv()">
+        <mat-icon>download</mat-icon>
+        Exportar CSV
+      </button>
+    </div>
+  </div>
+
+  <mat-card class="filter-card">
+    <mat-form-field appearance="outline" class="full-width">
+      <input 
+        matInput 
+        [(ngModel)]="filtroBusqueda" 
+        (input)="aplicarFiltro()"
+        placeholder="Buscar">
+      <mat-icon matPrefix>search</mat-icon>
+    </mat-form-field>
+  </mat-card>
+
+  <mat-card class="table-card">
+    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z0">
+      <!-- Tipo Activo Column -->
+      <ng-container matColumnDef="activoTipo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>TIPO</th>
+        <td mat-cell *matCellDef="let historico">{{ historico.activoTipo }}</td>
+      </ng-container>
+
+      <!-- Código Activo Column -->
+      <ng-container matColumnDef="activoCodigo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>CÓDIGO ACTIVO</th>
+        <td mat-cell *matCellDef="let historico">{{ historico.activoCodigo }}</td>
+      </ng-container>
+
+      <!-- Referencia Activo Column -->
+      <ng-container matColumnDef="activoReferencia">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>REFERENCIA</th>
+        <td mat-cell *matCellDef="let historico">{{ historico.activoReferencia }}</td>
+      </ng-container>
+
+      <!-- Persona Column -->
+      <ng-container matColumnDef="persona">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>PERSONA ASIGNADA</th>
+        <td mat-cell *matCellDef="let historico">{{ historico.persona }}</td>
+      </ng-container>
+
+      <!-- Fecha Asignacion Column -->
+      <ng-container matColumnDef="fechaAsignacion">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>F. ASIGNACIÓN</th>
+        <td mat-cell *matCellDef="let historico">
+          {{ historico.fechaAsignacion ? (historico.fechaAsignacion | date:'dd/MM/yyyy') : '-' }}
+        </td>
+      </ng-container>
+
+      <!-- Fecha Devolucion Prevista Column -->
+      <ng-container matColumnDef="fechaDevolucionPrevista">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>F. PREVISTA DEVOLUCIÓN</th>
+        <td mat-cell *matCellDef="let historico">
+          {{ historico.fechaDevolucionPrevista ? (historico.fechaDevolucionPrevista | date:'dd/MM/yyyy') : '-' }}
+        </td>
+      </ng-container>
+
+      <!-- Fecha Devolucion Column -->
+      <ng-container matColumnDef="fechaDevolucion">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>F. REAL DEVOLUCIÓN</th>
+        <td mat-cell *matCellDef="let historico">
+          {{ historico.fechaDevolucion ? (historico.fechaDevolucion | date:'shortDate') : '-' }}
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+      <!-- Row shown when there is no matching data. -->
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+          <div class="no-data">
+            {{ filtroBusqueda ? 'No se encontraron resultados' : 'No hay registros de histórico' }}
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    <mat-paginator 
+      [pageSizeOptions]="[5, 10, 20, 50]" 
+      showFirstLastButtons>
+    </mat-paginator>
+  </mat-card>
+</div>

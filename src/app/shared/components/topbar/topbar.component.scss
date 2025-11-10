@@ -1,0 +1,146 @@
+.topbar {
+  background-color: var(--orbita-bg-card);
+  color: var(--orbita-text-primary);
+  box-shadow: var(--orbita-shadow-sm);
+  padding: 0 16px;
+  height: 64px;
+  position: sticky; // sticky funciona como relative para elementos hijos
+  top: 0;
+  z-index: 100;
+  font-size: 14px; // Tamaño de texto legible
+}
+
+.menu-toggle {
+  color: var(--orbita-text-primary);
+  
+  mat-icon {
+    font-size: 24px; // Tamaño de icono apropiado
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: 8px;
+  margin-right: 16px;
+  height: 100%;
+  
+  .logo-icon {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+  }
+  
+  .logo-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+    justify-content: center;
+    
+    .logo-main {
+      font-size: 20px;
+      font-weight: 700;
+      color: #25282A;
+      letter-spacing: 1px;
+      line-height: 1;
+    }
+    
+    .logo-subtitle {
+      font-size: 8px;
+      font-weight: 500;
+      color: #25282A;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      line-height: 1.2;
+      margin-top: 1px;
+    }
+  }
+}
+
+.topbar-title {
+  margin: 0;
+  margin-left: 16px;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--orbita-text-primary);
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.topbar-nav {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  
+  .nav-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--orbita-text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+    padding: 8px 12px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+    
+    &:hover {
+      background-color: var(--orbita-bg-app);
+      color: var(--orbita-text-primary);
+    }
+    
+    &.active {
+      color: var(--orbita-accent);
+      background-color: rgba(255, 104, 46, 0.1);
+    }
+  }
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  
+  .user-info {
+    font-size: 13px;
+    color: var(--orbita-text-secondary);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  
+  button {
+    color: var(--orbita-text-primary);
+    
+    mat-icon {
+      font-size: 24px; // Tamaño de icono apropiado
+      width: 24px;
+      height: 24px;
+    }
+  }
+}
+
+::ng-deep {
+  .mat-toolbar {
+    font-size: 14px !important; // Asegurar tamaño legible
+  }
+  
+  .mat-mdc-menu-item {
+    font-size: 14px !important; // Tamaño legible en menú
+  }
+}
+

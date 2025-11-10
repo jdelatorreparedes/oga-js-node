@@ -1,0 +1,231 @@
+<div class="activos-container">
+  <div class="header-actions">
+    <h2>Activos</h2>
+    <div class="button-group">
+      <button 
+        class="btn-primary" 
+        (click)="abrirModalAnadir()"
+        title="Añadir nuevo activo (Shift + A)">
+        Añadir
+      </button>
+      <button class="btn-secondary" (click)="exportarCsv()">
+        Exportar CSV
+      </button>
+      <button class="btn-secondary" (click)="importarCsv()">
+        Importar CSV
+      </button>
+      <button 
+        class="btn-secondary" 
+        (click)="toggleMostrarBajas()"
+        [class.active]="mostrarBajas">
+        {{ mostrarBajas ? 'Ocultar Bajas' : 'Mostrar Bajas' }}
+      </button>
+    </div>
+  </div>
+
+  <div class="filtro-container">
+    <input
+      type="text"
+      class="filtro-input"
+      [(ngModel)]="filtroBusqueda"
+      (input)="aplicarFiltro()"
+      placeholder="Buscar por código, referencia, descripción, tipo o persona..."
+    />
+  </div>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Tipo</th>
+          <th>Código</th>
+          <th>Referencia</th>
+          <th>Descripción</th>
+          <th>Estado</th>
+          <th>Persona Asignada</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let activo of activosFiltrados">
+          <td>{{ activo.tipoNombre }}</td>
+          <td>{{ activo.codigo }}</td>
+          <td>{{ activo.referencia }}</td>
+          <td>{{ activo.descripcion }}</td>
+          <td>
+            <span class="badge" [ngClass]="getEstadoClass(activo.estado)">
+              {{ activo.estado }}
+            </span>
+          </td>
+          <td>{{ activo.personaAsignada || '-' }}</td>
+          <td>
+            <button 
+              *ngIf="activo.estado === 'Disponible'"
+              class="btn-success btn-small" 
+              (click)="abrirModalAsignar(activo)">
+              Asignar
+            </button>
+            <button 
+              *ngIf="activo.estado === 'Asignado'"
+              class="btn-warning btn-small" 
+              (click)="devolver(activo)">
+              Devolver
+            </button>
+            <button 
+              *ngIf="activo.estado !== 'Asignado'"
+              class="btn-secondary btn-small" 
+              (click)="abrirModalEditar(activo)">
+              Editar
+            </button>
+            <button 
+              *ngIf="activo.estado !== 'Asignado' && activo.estado !== 'Baja'"
+              class="btn-danger btn-small" 
+              (click)="abrirModalBaja(activo)">
+              Dar de Baja
+            </button>
+            <button 
+              *ngIf="activo.estado !== 'Asignado'"
+              class="btn-danger btn-small" 
+              (click)="eliminar(activo)">
+              Eliminar
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="activosFiltrados.length === 0">
+          <td colspan="7" style="text-align: center; padding: 40px;">
+            {{ filtroBusqueda ? 'No se encontraron resultados' : 'No hay activos registrados' }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Modal Añadir/Editar Activo -->
+<div class="modal-overlay" *ngIf="mostrarModal" (click)="cancelar()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <h3>{{ activoEditando ? 'Editar Activo' : 'Anadir Activo' }}</h3>
+    <div class="form-group">
+      <label for="tipo">Tipo *:</label>
+      <select #inputTipo id="tipo" [(ngModel)]="tipoId" required>
+        <option [value]="null">Seleccione un tipo</option>
+        <option *ngFor="let tipo of tipos" [value]="tipo.id">
+          {{ tipo.nombre }}
+        </option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="codigo">Código *:</label>
+      <input
+        type="text"
+        id="codigo"
+        [(ngModel)]="codigo"
+        placeholder="Ingrese el código"
+        required
+      />
+    </div>
+    <div class="form-group">
+      <label for="referencia">Referencia *:</label>
+      <input
+        type="text"
+        id="referencia"
+        [(ngModel)]="referencia"
+        placeholder="Ingrese la referencia"
+        required
+      />
+    </div>
+    <div class="form-group">
+      <label for="descripcion">Descripción:</label>
+      <textarea
+        id="descripcion"
+        [(ngModel)]="descripcion"
+        placeholder="Ingrese la descripción"
+        rows="3"
+      ></textarea>
+    </div>
+    <div class="form-group">
+      <label for="area">Área:</label>
+      <input
+        type="text"
+        id="area"
+        [(ngModel)]="area"
+        placeholder="Ingrese el área"
+      />
+    </div>
+    <div class="form-group">
+      <label for="responsable">Responsable:</label>
+      <input
+        type="text"
+        id="responsable"
+        [(ngModel)]="responsable"
+        placeholder="Ingrese el responsable"
+      />
+    </div>
+    <div class="form-group">
+      <label for="fechaRevision">Fecha de Revisión:</label>
+      <input
+        type="date"
+        id="fechaRevision"
+        [(ngModel)]="fechaRevision"
+      />
+    </div>
+    <div class="modal-actions">
+      <button class="btn-primary" (click)="guardar()">Guardar</button>
+      <button class="btn-secondary" (click)="cancelar()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Asignar Activo -->
+<div class="modal-overlay" *ngIf="mostrarModalAsignar" (click)="cancelarAsignacion()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <h3>Asignar Activo</h3>
+    <div class="form-group">
+      <label for="personaAsignacion">Persona *:</label>
+      <input
+        #inputPersona
+        type="text"
+        id="personaAsignacion"
+        [(ngModel)]="personaAsignacion"
+        placeholder="Ingrese el nombre de la persona"
+        required
+      />
+    </div>
+    <div class="form-group">
+      <label for="fechaDevolucionPrevista">Fecha Prevista de Devolución *:</label>
+      <input
+        type="date"
+        id="fechaDevolucionPrevista"
+        [(ngModel)]="fechaDevolucionPrevista"
+        required
+      />
+    </div>
+    <div class="modal-actions">
+      <button class="btn-primary" (click)="guardarAsignacion()">Guardar</button>
+      <button class="btn-secondary" (click)="cancelarAsignacion()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Dar de Baja -->
+<div class="modal-overlay" *ngIf="mostrarModalBaja" (click)="cancelarBaja()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <h3>Dar de Baja Activo</h3>
+    <div class="form-group">
+      <label for="motivoBaja">Motivo de la Baja *:</label>
+      <textarea
+        #inputMotivo
+        id="motivoBaja"
+        [(ngModel)]="motivoBaja"
+        placeholder="Ingrese el motivo de la baja"
+        rows="4"
+        required
+      ></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-danger" (click)="guardarBaja()">Confirmar Baja</button>
+      <button class="btn-secondary" (click)="cancelarBaja()">Cancelar</button>
+    </div>
+  </div>
+</div>
+

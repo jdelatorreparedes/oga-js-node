@@ -1,0 +1,47 @@
+<h2 mat-dialog-title>Asignar Activo: {{ data.activo.codigo }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" (ngSubmit)="guardar()">
+    <mat-form-field appearance="outline" class="full-width">
+      <input
+        #personaInput
+        matInput
+        formControlName="persona"
+        placeholder="Persona asignada"
+        (keydown.enter)="guardar()"
+        required>
+      <mat-error *ngIf="form.get('persona')?.hasError('required')">
+        La persona asignada es obligatoria
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Fecha Prevista de Devolución</mat-label>
+      <input
+        matInput
+        [matDatepicker]="picker"
+        formControlName="fechaDevolucionPrevista"
+        required>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+      <mat-error *ngIf="form.get('fechaDevolucionPrevista')?.hasError('required')">
+        La fecha de devolución prevista es obligatoria
+      </mat-error>
+      <mat-error *ngIf="form.get('fechaDevolucionPrevista')?.hasError('fechaPasada')">
+        La fecha debe ser posterior a hoy
+      </mat-error>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancelar()">Cancelar</button>
+  <button
+    mat-raised-button
+    color="accent"
+    (click)="guardar()"
+    [disabled]="form.invalid || guardando">
+    {{ guardando ? 'Asignando...' : 'Asignar' }}
+  </button>
+</mat-dialog-actions>
+

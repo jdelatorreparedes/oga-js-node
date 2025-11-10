@@ -1,0 +1,23 @@
+{
+  "source": {
+    "include": ["./server.js", "./middleware", "./db.config.js", "./logger.js"],
+    "includePattern": "\\.js$",
+    "exclude": ["node_modules", "logs"]
+  },
+  "opts": {
+    "destination": "../docs/backend",
+    "recurse": true,
+    "readme": "../README.md"
+  },
+  "templates": {
+    "cleverLinks": true,
+    "monospaceLinks": true,
+    "default": {
+      "outputSourceFiles": true
+    }
+  },
+  "tags": {
+    "allowUnknownTags": true
+  }
+}
+

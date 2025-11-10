@@ -1,0 +1,21 @@
+<div *ngIf="showLayout">
+  <app-sidebar *ngIf="showSidebar">
+    <div class="content-wrapper">
+      <app-topbar (menuToggle)="onMenuToggle()"></app-topbar>
+      <div class="main-content">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </app-sidebar>
+  <div *ngIf="!showSidebar" class="content-wrapper-no-sidebar">
+    <app-topbar (menuToggle)="onMenuToggle()"></app-topbar>
+    <div class="main-content">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>
+<div *ngIf="!showLayout">
+  <router-outlet></router-outlet>
+</div>
+<app-loader></app-loader>
+

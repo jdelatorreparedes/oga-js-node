@@ -1,0 +1,101 @@
+<h2 mat-dialog-title>{{ titulo }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" (ngSubmit)="guardar()">
+    <div class="field-group">
+      <label class="field-label">Tipo de activo</label>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-select #tipoSelect formControlName="tipoId" placeholder="Seleccione el tipo de activo" required>
+          <mat-option *ngFor="let tipo of tipos" [value]="tipo.id">{{ tipo.nombre }}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="form.get('tipoId')?.hasError('required')">
+          El tipo de activo es obligatorio
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Marca</label>
+      <mat-form-field appearance="outline" class="full-width">
+        <input matInput formControlName="marca" placeholder="Ingrese la marca">
+      </mat-form-field>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Código</label>
+      <mat-form-field appearance="outline" class="full-width">
+        <input
+          matInput
+          formControlName="codigo"
+          placeholder="Ingrese el código del activo"
+          required>
+        <mat-error *ngIf="form.get('codigo')?.hasError('required')">
+          El código es obligatorio
+        </mat-error>
+        <mat-error *ngIf="form.get('codigo')?.hasError('minlength')">
+          El código debe tener al menos 1 carácter
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Referencia</label>
+      <mat-form-field appearance="outline" class="full-width">
+        <input matInput formControlName="referencia" placeholder="Ingrese la referencia">
+      </mat-form-field>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Descripción</label>
+      <mat-form-field appearance="outline" class="full-width">
+        <textarea matInput formControlName="descripcion" placeholder="Ingrese la descripción" rows="2"></textarea>
+      </mat-form-field>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Detalles</label>
+      <mat-form-field appearance="outline" class="full-width">
+        <textarea matInput formControlName="detalles" placeholder="Ingrese los detalles" rows="2"></textarea>
+      </mat-form-field>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Área</label>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-select formControlName="area" placeholder="Seleccione el área">
+          <mat-option value="">Sin área</mat-option>
+          <mat-option *ngFor="let area of areas" [value]="area.codigo">{{ area.nombre }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Responsable</label>
+      <mat-form-field appearance="outline" class="full-width">
+        <input matInput formControlName="responsable" placeholder="Ingrese el responsable">
+      </mat-form-field>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Fecha de revisión</label>
+      <mat-form-field appearance="outline" class="full-width">
+        <input matInput [matDatepicker]="picker" formControlName="fechaRevision" placeholder="Seleccione la fecha de revisión">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button type="button" (click)="cancelar()">Cancelar</button>
+  <button
+    mat-raised-button
+    type="button"
+    color="accent"
+    (click)="guardar()"
+    [disabled]="form.invalid || guardando">
+    {{ guardando ? 'Guardando...' : 'Guardar' }}
+  </button>
+</mat-dialog-actions>
+

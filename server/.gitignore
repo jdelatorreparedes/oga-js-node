@@ -1,0 +1,4 @@
+node_modules/
+activos.db
+*.log
+logs/

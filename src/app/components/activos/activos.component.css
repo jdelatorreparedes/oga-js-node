@@ -1,0 +1,62 @@
+.activos-container {
+  background-color: var(--bg-primary);
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: var(--shadow);
+}
+
+.header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.header-actions h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.button-group {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.button-group button.active {
+  background-color: var(--primary-light);
+  color: white;
+}
+
+.btn-small {
+  padding: 6px 12px;
+  font-size: 13px;
+  margin-right: 8px;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.filtro-container {
+  margin-bottom: 20px;
+}
+
+.filtro-input {
+  width: 100%;
+  max-width: 500px;
+  padding: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 14px;
+}
+

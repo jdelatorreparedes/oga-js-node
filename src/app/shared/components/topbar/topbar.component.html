@@ -1,0 +1,77 @@
+<mat-toolbar class="topbar">
+  <button mat-icon-button (click)="onMenuToggle()" class="menu-toggle" *ngIf="showMenuButton">
+    <mat-icon>menu</mat-icon>
+  </button>
+  
+  <div class="logo-container">
+    <svg class="logo-icon" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+      <!-- Engranaje/Forma principal con protrusiones redondeadas -->
+      <path d="M 30 10 
+              Q 35 8 40 10
+              L 45 15
+              Q 47 20 45 25
+              L 50 30
+              Q 52 35 50 40
+              L 45 45
+              Q 40 47 35 45
+              L 30 50
+              Q 25 52 20 50
+              L 15 45
+              Q 13 40 15 35
+              L 10 30
+              Q 8 25 10 20
+              L 15 15
+              Q 20 8 25 10
+              Z" fill="#25282A"/>
+      <!-- Arco naranja que envuelve la parte superior-izquierda -->
+      <path d="M 30 10 
+              Q 25 12 20 15
+              Q 12 20 10 25
+              Q 8 28 10 30" 
+            stroke="#FF682E" 
+            stroke-width="5" 
+            fill="none" 
+            stroke-linecap="round"
+            stroke-linejoin="round"/>
+    </svg>
+    <div class="logo-text">
+      <span class="logo-main">OGA</span>
+      <span class="logo-subtitle">GESTION DE ACTIVOS</span>
+    </div>
+  </div>
+  
+  <div class="topbar-nav">
+    <button 
+      *ngFor="let item of menuItems" 
+      mat-button 
+      [routerLink]="item.route"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{exact: item.route === '/dashboard'}"
+      class="nav-button">
+      <mat-icon>{{ item.icon }}</mat-icon>
+      <span>{{ item.label }}</span>
+    </button>
+  </div>
+  
+  <span class="spacer"></span>
+  
+  <div class="topbar-actions">
+    <span class="user-info" *ngIf="currentUser">
+      {{ currentUser.username }} ({{ currentUser.rol }})
+    </span>
+    <button mat-icon-button [matMenuTriggerFor]="userMenu">
+      <mat-icon>account_circle</mat-icon>
+    </button>
+    <mat-menu #userMenu="matMenu">
+      <button mat-menu-item (click)="openChangePasswordDialog()">
+        <mat-icon>lock</mat-icon>
+        <span>Cambiar contraseña</span>
+      </button>
+      <button mat-menu-item (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        <span>Cerrar sesión</span>
+      </button>
+    </mat-menu>
+  </div>
+</mat-toolbar>
+

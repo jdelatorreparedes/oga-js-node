@@ -1,0 +1,27 @@
+mat-dialog-content {
+  min-width: 450px; // Ancho suficiente para el label completo
+  padding: 20px 24px;
+}
+
+.full-width {
+  width: 100%;
+  
+  // Asegurar que el label no se corte
+  ::ng-deep {
+    .mdc-floating-label {
+      white-space: nowrap !important;
+      overflow: visible !important;
+      text-overflow: clip !important;
+    }
+    
+    .mdc-notched-outline__notch {
+      max-width: calc(100% - 32px) !important;
+    }
+  }
+}
+
+mat-dialog-actions {
+  padding: 8px 24px 16px;
+  gap: 8px;
+}
+

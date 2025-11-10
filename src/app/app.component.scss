@@ -1,0 +1,22 @@
+.content-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: var(--orbita-bg-app);
+}
+
+.content-wrapper-no-sidebar {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: var(--orbita-bg-app);
+  width: 100%;
+}
+
+.main-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+  background-color: var(--orbita-bg-app);
+}
+

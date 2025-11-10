@@ -1,0 +1,132 @@
+.usuarios-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+
+  h1 {
+    margin: 0;
+    font-weight: 700;
+    color: var(--orbita-text-primary);
+    font-size: 24px;
+  }
+
+  .actions {
+    display: flex;
+    gap: 12px;
+    
+    button {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 16px;
+      min-width: auto;
+      white-space: nowrap;
+      
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        line-height: 18px;
+        margin: 0;
+        flex-shrink: 0;
+        font-family: 'Material Icons' !important;
+        font-feature-settings: 'liga' !important;
+      }
+    }
+  }
+}
+
+.filter-card {
+  margin-bottom: 24px;
+  padding: 16px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.table-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+table {
+  width: 100%;
+  font-size: 14px;
+}
+
+.no-data {
+  text-align: center;
+  padding: 40px;
+  color: var(--orbita-text-secondary);
+}
+
+.mat-column-acciones {
+  button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50% !important;
+    min-width: 40px !important;
+    padding: 0 !important;
+    
+    &::before {
+      border-radius: 50% !important;
+    }
+    
+    .mat-mdc-button-persistent-ripple,
+    .mdc-ripple-surface {
+      border-radius: 50% !important;
+    }
+    
+    &.mat-warn {
+      background-color: #dc2626 !important;
+      color: #ffffff !important;
+      
+      &:hover {
+        background-color: #b91c1c !important;
+      }
+      
+      mat-icon {
+        color: #ffffff !important;
+      }
+    }
+    
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+      line-height: 20px;
+    }
+  }
+}
+
+::ng-deep {
+  .estado-activo {
+    background-color: #d1fae5 !important;
+    color: #065f46 !important;
+    
+    .mdc-evolution-chip__text-label {
+      color: #065f46 !important;
+    }
+  }
+  
+  .estado-inactivo {
+    background-color: #fee2e2 !important;
+    color: #991b1b !important;
+    
+    .mdc-evolution-chip__text-label {
+      color: #991b1b !important;
+    }
+  }
+  
+  .mat-mdc-form-field {
+    width: 100%;
+  }
+}
+

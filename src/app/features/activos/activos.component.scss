@@ -1,0 +1,178 @@
+.activos-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+
+  h1 {
+    margin: 0;
+    font-weight: 700;
+    color: var(--orbita-text-primary);
+    font-size: 24px; // Título legible
+  }
+
+  .actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    
+    button {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 16px;
+      min-width: auto;
+      white-space: nowrap;
+      
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        line-height: 18px;
+        margin: 0;
+        flex-shrink: 0;
+        font-family: 'Material Icons' !important;
+        font-feature-settings: 'liga' !important;
+      }
+    }
+  }
+}
+
+.filter-card {
+  margin-bottom: 24px;
+  padding: 16px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.table-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+table {
+  width: 100%;
+  font-size: 14px; // Asegurar tamaño legible en tabla
+}
+
+.mat-column-acciones {
+  width: auto;
+  min-width: 280px;
+  text-align: center;
+  
+  .acciones-cell {
+    padding: 8px !important;
+  }
+  
+  .acciones-buttons {
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    
+    button {
+      width: 36px;
+      height: 36px;
+      border-radius: 50% !important; // Círculo perfecto
+      min-width: 36px !important;
+      padding: 0 !important;
+      
+      // Asegurar que el fondo sea circular en todos los estados
+      &::before {
+        border-radius: 50% !important;
+      }
+      
+      // Asegurar que el ripple también sea circular
+      .mat-mdc-button-persistent-ripple,
+      .mdc-ripple-surface {
+        border-radius: 50% !important;
+      }
+      
+      // Fondo circular para botones warn (eliminar y dar de baja) con más contraste
+      &.mat-warn {
+        background-color: #dc2626 !important; // Rojo más oscuro y visible
+        color: #ffffff !important; // Icono blanco para contraste
+        
+        .mat-mdc-button-persistent-ripple::before,
+        .mdc-ripple-surface::before {
+          border-radius: 50% !important;
+        }
+        
+        // Hover con fondo aún más oscuro
+        &:hover {
+          background-color: #b91c1c !important; // Rojo más oscuro en hover
+        }
+        
+        mat-icon {
+          color: #ffffff !important; // Icono blanco
+        }
+      }
+      
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        line-height: 18px;
+      }
+    }
+  }
+}
+
+.no-data {
+  text-align: center;
+  padding: 40px;
+  color: var(--orbita-text-secondary);
+  font-size: 14px; // Asegurar tamaño legible
+}
+
+// Estilos para los chips de estado
+::ng-deep {
+  .estado-disponible {
+    background-color: #d1fae5 !important; // Fondo verde claro
+    color: #065f46 !important; // Texto verde oscuro
+    
+    .mdc-evolution-chip__text-label {
+      color: #065f46 !important; // Texto verde oscuro
+    }
+  }
+  
+  .estado-asignado {
+    background-color: #fef3c7 !important; // Fondo amarillo claro
+    color: #d97706 !important; // Texto amarillo oscuro
+    
+    .mdc-evolution-chip__text-label {
+      color: #d97706 !important; // Texto amarillo oscuro
+    }
+  }
+  
+  .estado-baja {
+    background-color: #fee2e2 !important; // Fondo rojo claro
+    color: #991b1b !important; // Texto rojo oscuro
+    
+    .mdc-evolution-chip__text-label {
+      color: #991b1b !important; // Texto rojo oscuro
+    }
+  }
+  
+  .mat-mdc-form-field {
+    width: 100%;
+    font-size: 14px; // Asegurar tamaño legible
+  }
+  .mat-mdc-paginator, .mat-mdc-table {
+    font-size: 14px; // Asegurar tamaño legible en tabla y paginador
+  }
+  .mat-mdc-menu-item {
+    font-size: 14px; // Asegurar tamaño legible en menú
+  }
+  .mat-mdc-chip {
+    font-size: 12px; // Chips un poco más pequeños pero legibles
+  }
+}

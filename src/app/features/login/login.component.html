@@ -1,0 +1,48 @@
+<div class="login-container">
+  <mat-card class="login-card">
+    <mat-card-header>
+      <mat-card-title>ORBITA GESTIÓN ACTIVOS (OGA)</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="form" (ngSubmit)="login()">
+        <mat-form-field appearance="outline" class="full-width">
+          <input
+            matInput
+            formControlName="username"
+            placeholder="Usuario"
+            required>
+          <mat-icon matPrefix>person</mat-icon>
+          <mat-error *ngIf="form.get('username')?.hasError('required')">
+            El usuario es obligatorio
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <input
+            matInput
+            type="password"
+            formControlName="password"
+            placeholder="Contraseña"
+            required>
+          <mat-icon matPrefix>lock</mat-icon>
+          <mat-error *ngIf="form.get('password')?.hasError('required')">
+            La contraseña es obligatoria
+          </mat-error>
+        </mat-form-field>
+
+        <button
+          mat-raised-button
+          color="accent"
+          type="submit"
+          class="full-width login-button"
+          [disabled]="form.invalid || loading">
+          <mat-icon *ngIf="!loading">login</mat-icon>
+          <mat-spinner *ngIf="loading" diameter="20" class="inline-spinner"></mat-spinner>
+          {{ loading ? 'Iniciando sesión...' : 'Iniciar Sesión' }}
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
+

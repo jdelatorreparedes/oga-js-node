@@ -1,0 +1,128 @@
+.sidebar-container {
+  height: 100vh;
+}
+
+.sidebar {
+  background-color: var(--orbita-primary);
+  color: var(--orbita-text-white);
+  box-shadow: var(--orbita-shadow-md);
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  min-height: 70px;
+  gap: 8px;
+}
+
+.logo {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  h2 {
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 20px; // Tamaño más apropiado
+    color: var(--orbita-text-white);
+    line-height: 1.2;
+  }
+  .subtitle {
+    font-size: 11px; // Tamaño apropiado para subtítulo
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 400;
+    margin-top: 2px;
+  }
+}
+
+.toggle-btn {
+  color: var(--orbita-text-white);
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  margin-left: 8px;
+  transition: background-color 0.2s ease;
+  
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+  
+  mat-icon {
+    font-size: 20px; // Tamaño de icono apropiado
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.sidebar-nav {
+  padding: 8px 0;
+  
+  .nav-item {
+    color: rgba(255, 255, 255, 0.9);
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    text-decoration: none;
+    
+    ::ng-deep {
+      .mat-mdc-list-item-icon {
+        color: rgba(255, 255, 255, 0.9);
+        margin-right: 16px;
+        flex-shrink: 0;
+      }
+    }
+    
+    .nav-label {
+      font-weight: 500;
+      font-size: 15px; // Tamaño legible
+      color: rgba(255, 255, 255, 0.9);
+      white-space: nowrap;
+      overflow: visible;
+    }
+    
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      
+      .nav-label {
+        color: var(--orbita-text-white);
+      }
+      
+      ::ng-deep .mat-mdc-list-item-icon {
+        color: var(--orbita-text-white);
+      }
+    }
+    
+    &.active {
+      background-color: var(--orbita-accent);
+      
+      .nav-label {
+        color: var(--orbita-text-white);
+        font-weight: 600;
+      }
+      
+      ::ng-deep .mat-mdc-list-item-icon {
+        color: var(--orbita-text-white);
+      }
+    }
+  }
+}
+
+::ng-deep {
+  .mat-drawer-inner-container {
+    overflow: visible;
+  }
+  
+  .mat-mdc-list-item {
+    height: auto !important;
+    padding: 0 !important;
+  }
+  
+  .mat-mdc-list-item-unscoped-content {
+    display: flex !important;
+    align-items: center !important;
+    width: 100% !important;
+  }
+}

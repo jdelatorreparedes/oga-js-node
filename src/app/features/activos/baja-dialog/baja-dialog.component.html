@@ -1,0 +1,31 @@
+<h2 mat-dialog-title>Dar de Baja Activo: {{ data.activo.codigo }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" (ngSubmit)="guardar()">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Motivo de la Baja</mat-label>
+      <textarea
+        #motivoInput
+        matInput
+        formControlName="motivo"
+        placeholder="Ingrese el motivo de la baja"
+        rows="4"
+        required></textarea>
+      <mat-error *ngIf="form.get('motivo')?.hasError('required')">
+        El motivo de la baja es obligatorio
+      </mat-error>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancelar()">Cancelar</button>
+  <button
+    mat-raised-button
+    color="warn"
+    (click)="guardar()"
+    [disabled]="form.invalid || guardando">
+    {{ guardando ? 'Dando de baja...' : 'Confirmar Baja' }}
+  </button>
+</mat-dialog-actions>
+

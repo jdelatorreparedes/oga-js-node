@@ -1,0 +1,42 @@
+<mat-sidenav-container class="sidebar-container">
+  <mat-sidenav 
+    #sidenav 
+    mode="side" 
+    [opened]="!isCollapsed"
+    class="sidebar"
+    [style.width.px]="isCollapsed ? 64 : 250">
+    
+    <div class="sidebar-header">
+      <div class="logo" *ngIf="!isCollapsed">
+        <h2>Órbita</h2>
+        <span class="subtitle">Gestión Activos</span>
+      </div>
+      <button 
+        mat-icon-button 
+        (click)="toggle()" 
+        class="toggle-btn" 
+        [attr.aria-label]="isCollapsed ? 'Expandir menú' : 'Colapsar menú'"
+        [matTooltip]="isCollapsed ? 'Expandir menú' : 'Colapsar menú'">
+        <mat-icon>{{ isCollapsed ? 'chevron_right' : 'chevron_left' }}</mat-icon>
+      </button>
+    </div>
+
+    <mat-nav-list class="sidebar-nav">
+      <a 
+        *ngFor="let item of menuItems" 
+        mat-list-item 
+        [routerLink]="item.route"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{exact: item.route === '/dashboard'}"
+        class="nav-item">
+        <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+        <span *ngIf="!isCollapsed" class="nav-label">{{ item.label }}</span>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <ng-content></ng-content>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+

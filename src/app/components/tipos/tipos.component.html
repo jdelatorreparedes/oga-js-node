@@ -1,0 +1,80 @@
+<div class="tipos-container">
+  <div class="header-actions">
+    <h2>Tipos de Activos</h2>
+    <div class="button-group">
+      <button 
+        class="btn-primary" 
+        (click)="abrirModalAnadir()"
+        title="Añadir nuevo tipo (Shift + A)">
+        Añadir
+      </button>
+      <button class="btn-secondary" (click)="exportarCsv()">
+        Exportar CSV
+      </button>
+      <button class="btn-secondary" (click)="importarCsv()">
+        Importar CSV
+      </button>
+    </div>
+  </div>
+
+  <div class="filtro-container">
+    <input
+      type="text"
+      class="filtro-input"
+      [(ngModel)]="filtroBusqueda"
+      (input)="aplicarFiltro()"
+      placeholder="Buscar por nombre..."
+    />
+  </div>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let tipo of tiposFiltrados">
+          <td>{{ tipo.nombre }}</td>
+          <td>
+            <button class="btn-secondary btn-small" (click)="abrirModalEditar(tipo)">
+              Editar
+            </button>
+            <button class="btn-danger btn-small" (click)="eliminar(tipo)">
+              Eliminar
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="tiposFiltrados.length === 0">
+          <td colspan="2" style="text-align: center; padding: 40px;">
+            {{ filtroBusqueda ? 'No se encontraron resultados' : 'No hay tipos de activos registrados' }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="mostrarModal" (click)="cancelar()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <h3>{{ tipoEditando ? 'Editar Tipo' : 'Anadir Tipo' }}</h3>
+    <div class="form-group">
+      <label for="nombre">Nombre del Tipo:</label>
+      <input
+        #inputNombre
+        type="text"
+        id="nombre"
+        [(ngModel)]="nombreTipo"
+        placeholder="Ingrese el nombre del tipo"
+        (keydown.enter)="guardar()"
+      />
+    </div>
+    <div class="modal-actions">
+      <button class="btn-primary" (click)="guardar()">Guardar</button>
+      <button class="btn-secondary" (click)="cancelar()">Cancelar</button>
+    </div>
+  </div>
+</div>
+

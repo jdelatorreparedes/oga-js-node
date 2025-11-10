@@ -1,0 +1,494 @@
+/* Importar fuente Montserrat */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
+/* Importar tema de Angular Material */
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+/* Variables de color - Identidad Órbita Ingeniería */
+:root {
+  /* Colores primarios */
+  --orbita-primary: #25282A;
+  --orbita-accent: #FF682E;
+  
+  /* Fondos */
+  --orbita-bg-app: #F7F8FA;
+  --orbita-bg-card: #FFFFFF;
+  
+  /* Textos */
+  --orbita-text-primary: #25282A;
+  --orbita-text-secondary: #6B7280;
+  --orbita-text-white: #FFFFFF;
+  
+  /* Bordes */
+  --orbita-border: #E5E7EB;
+  
+  /* Sombras */
+  --orbita-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --orbita-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --orbita-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --orbita-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Reset y configuración global */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-weight: 400;
+  color: var(--orbita-text-primary);
+  background-color: var(--orbita-bg-app);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 16px; // Tamaño base más legible
+}
+
+/* Tipografías */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  color: var(--orbita-text-primary);
+  line-height: 1.2;
+}
+
+h1 { font-weight: 700; font-size: 28px; } // Título principal legible
+h2 { font-weight: 700; font-size: 24px; } // Subtítulos legibles
+h3 { font-weight: 600; font-size: 20px; }
+h4 { font-weight: 600; font-size: 18px; }
+h5 { font-weight: 600; font-size: 16px; }
+h6 { font-weight: 600; font-size: 16px; } // Mínimo 16px para legibilidad
+
+/* Utilidades */
+.text-primary { color: var(--orbita-text-primary); }
+.text-secondary { color: var(--orbita-text-secondary); }
+.text-white { color: var(--orbita-text-white); }
+
+.bg-primary { background-color: var(--orbita-primary); }
+.bg-accent { background-color: var(--orbita-accent); }
+.bg-app { background-color: var(--orbita-bg-app); }
+.bg-card { background-color: var(--orbita-bg-card); }
+
+/* Cards */
+.card {
+  background-color: var(--orbita-bg-card);
+  border-radius: 8px;
+  box-shadow: var(--orbita-shadow);
+  padding: 24px;
+  margin-bottom: 16px;
+}
+
+/* Override Material Theme Colors */
+.mat-primary {
+  background-color: var(--orbita-primary) !important;
+  color: var(--orbita-text-white) !important;
+}
+
+.mat-accent {
+  background-color: var(--orbita-accent) !important;
+  color: var(--orbita-text-white) !important;
+}
+
+/* Accesibilidad - Contraste AA */
+a:focus,
+button:focus,
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid var(--orbita-accent);
+  outline-offset: 2px;
+}
+
+/* Scrollbar personalizado */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--orbita-bg-app);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--orbita-text-secondary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--orbita-text-primary);
+}
+
+/* Snackbar personalizado */
+.success-snackbar {
+  background-color: #10b981 !important;
+  color: white !important;
+}
+
+.error-snackbar {
+  background-color: #ef4444 !important;
+  color: white !important;
+}
+
+.info-snackbar {
+  background-color: #3b82f6 !important;
+  color: white !important;
+}
+
+.warning-snackbar {
+  background-color: #f59e0b !important;
+  color: white !important;
+}
+
+/* Estilos para Angular Material - Tamaños legibles */
+.mat-mdc-card {
+  border-radius: 8px !important;
+  box-shadow: var(--orbita-shadow) !important;
+}
+
+.mat-mdc-button, .mat-mdc-raised-button, .mat-mdc-stroked-button {
+  border-radius: 4px !important;
+  font-weight: 500 !important;
+  font-size: 15px !important; // Botones legibles
+  white-space: nowrap !important; // Evitar que el texto se corte
+  overflow: visible !important;
+  
+  // Asegurar que los iconos y texto se alineen correctamente
+  mat-icon {
+    font-size: 18px !important;
+    width: 18px !important;
+    height: 18px !important;
+    line-height: 18px !important;
+    margin-right: 8px !important;
+    margin-left: 0 !important;
+    flex-shrink: 0 !important;
+  }
+  
+  // Asegurar que el texto no se corte
+  .mdc-button__label {
+    white-space: nowrap !important;
+    overflow: visible !important;
+  }
+}
+
+// Estilos globales para botones de iconos en tablas (acciones)
+.mat-column-acciones {
+  .mat-mdc-icon-button {
+    border-radius: 50% !important;
+    
+    // Asegurar que el ripple sea circular
+    .mat-mdc-button-persistent-ripple,
+    .mdc-ripple-surface {
+      border-radius: 50% !important;
+    }
+    
+    // Asegurar que el fondo hover también sea circular
+    &:hover {
+      .mat-mdc-button-persistent-ripple,
+      .mdc-ripple-surface {
+        border-radius: 50% !important;
+      }
+    }
+  }
+}
+
+// Asegurar que los mat-icon solo muestren el icono, no texto
+.mat-icon {
+  font-family: 'Material Icons' !important;
+  font-weight: normal !important;
+  font-style: normal !important;
+  line-height: 1 !important;
+  letter-spacing: normal !important;
+  text-transform: none !important;
+  display: inline-block !important;
+  white-space: nowrap !important;
+  word-wrap: normal !important;
+  direction: ltr !important;
+  -webkit-font-feature-settings: 'liga' !important;
+  -webkit-font-smoothing: antialiased !important;
+  speak: none !important;
+  text-rendering: optimizeLegibility !important;
+  
+  // El contenido del mat-icon debe ser el nombre del icono, pero se renderiza como icono
+  // Asegurar que el texto no sea visible
+  font-variant: normal !important;
+  text-decoration: none !important;
+}
+
+.mat-mdc-form-field {
+  font-size: 16px !important; // Campos de formulario legibles
+  
+  // Asegurar fondo claro y texto oscuro para buena legibilidad
+  .mdc-text-field {
+    background-color: var(--orbita-bg-card) !important; // Fondo blanco
+  }
+  
+  // Input text visible
+  input.mat-mdc-input-element,
+  textarea.mat-mdc-input-element {
+    color: var(--orbita-text-primary) !important; // Texto oscuro
+    caret-color: var(--orbita-accent) !important; // Cursor naranja
+  }
+  
+  // Placeholder visible
+  input.mat-mdc-input-element::placeholder,
+  textarea.mat-mdc-input-element::placeholder {
+    color: var(--orbita-text-secondary) !important; // Placeholder gris visible
+    opacity: 0.7 !important;
+  }
+  
+  // Label visible y completo (sin cortarse)
+  .mdc-floating-label {
+    color: var(--orbita-text-secondary) !important;
+    white-space: nowrap !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    max-width: none !important;
+  }
+  
+  .mdc-floating-label--float-above {
+    color: var(--orbita-text-primary) !important;
+    white-space: nowrap !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    max-width: none !important;
+  }
+  
+  // Asegurar que el notch tenga suficiente espacio para el label
+  .mdc-notched-outline__notch {
+    max-width: calc(100% - 32px) !important;
+  }
+  
+  // Iconos visibles
+  mat-icon[matPrefix],
+  mat-icon[matSuffix] {
+    color: var(--orbita-text-secondary) !important;
+  }
+  
+  // Borde visible
+  .mdc-notched-outline__leading,
+  .mdc-notched-outline__notch,
+  .mdc-notched-outline__trailing {
+    border-color: var(--orbita-border) !important;
+  }
+  
+  // Borde cuando está enfocado
+  &.mat-focused {
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch,
+    .mdc-notched-outline__trailing {
+      border-color: var(--orbita-accent) !important;
+      border-width: 2px !important;
+    }
+  }
+}
+
+.mat-mdc-form-field-subscript-wrapper {
+  font-size: 13px !important; // Mensajes de error legibles
+  color: var(--orbita-text-secondary) !important;
+}
+
+.mat-mdc-paginator-container {
+  font-size: 15px !important; // Paginador legible
+  
+  // Asegurar que "items por página" aparezca en una sola línea
+  .mat-mdc-paginator-page-size-label {
+    white-space: nowrap !important;
+    margin-right: 8px !important;
+  }
+  
+  // Asegurar que el texto del rango no se corte
+  .mat-mdc-paginator-range-label {
+    white-space: nowrap !important;
+    margin: 0 16px !important;
+  }
+}
+
+.mat-mdc-table {
+  font-size: 15px !important; // Tabla legible
+  
+  // Estilos para los headers de las tablas - más contraste
+  .mat-mdc-header-row {
+    background-color: #E5E7EB !important; // Fondo gris más oscuro para mayor contraste
+    border-bottom: 3px solid var(--orbita-text-primary) !important; // Borde más grueso y oscuro
+    
+    .mat-mdc-header-cell {
+      font-weight: 700 !important; // Texto más grueso
+      font-size: 15px !important; // Tamaño un poco más grande
+      color: #25282A !important; // Texto muy oscuro para máximo contraste
+      letter-spacing: 0.5px !important; // Más espaciado de letras para mejor legibilidad
+      padding: 18px 16px !important; // Más padding vertical para destacar
+      text-transform: uppercase !important; // Asegurar mayúsculas
+    }
+  }
+}
+
+.mat-mdc-menu-item {
+  font-size: 15px !important; // Menú legible
+}
+
+.mat-mdc-dialog-container .mat-mdc-dialog-title {
+  font-size: 22px !important; // Título de diálogo legible
+  font-weight: 600 !important;
+  color: var(--orbita-text-primary) !important;
+}
+
+.mat-mdc-dialog-container .mat-mdc-dialog-content {
+  font-size: 15px !important; // Contenido de diálogo legible
+}
+
+.mat-mdc-chip-set .mat-mdc-chip {
+  font-size: 13px !important; // Chips legibles
+}
+
+.mat-mdc-list-item {
+  font-size: 15px !important; // Lista legible
+}
+
+// Estilos para el panel de opciones del mat-select (desplegable)
+// Estos estilos deben aplicarse globalmente ya que el panel se renderiza en un overlay
+.mat-mdc-select-panel,
+.cdk-overlay-pane .mat-mdc-select-panel,
+.cdk-overlay-container .mat-mdc-select-panel {
+  background-color: #FFFFFF !important; // Fondo blanco explícito
+  color: #25282A !important; // Texto oscuro explícito
+  
+  .mat-mdc-option,
+  .mdc-list-item {
+    color: #25282A !important; // Texto oscuro en las opciones
+    background-color: #FFFFFF !important; // Fondo blanco
+    
+    .mdc-list-item__primary-text {
+      color: #25282A !important; // Texto oscuro
+    }
+    
+    &:hover:not(.mdc-list-item--disabled) {
+      background-color: #F7F8FA !important; // Fondo gris claro al hover
+    }
+    
+    &.mdc-list-item--selected:not(.mdc-list-item--disabled) {
+      background-color: rgba(255, 104, 46, 0.1) !important; // Fondo naranja claro cuando está seleccionado
+      
+      .mdc-list-item__primary-text {
+        color: #FF682E !important; // Texto naranja cuando está seleccionado
+      }
+    }
+  }
+}
+
+// Estilos para el texto del select cuando está seleccionado
+.mat-mdc-select-value,
+.mat-mdc-select-value-text {
+  color: #25282A !important; // Texto oscuro
+}
+
+// Estilos para el placeholder del select
+.mat-mdc-select-placeholder {
+  color: #6B7280 !important; // Placeholder gris
+  opacity: 0.7 !important;
+}
+
+// Estilos para el calendario (datepicker) - Mejorar contraste
+// Aplicar a todos los overlays del datepicker
+.mat-datepicker-popup,
+.cdk-overlay-pane .mat-datepicker-popup,
+.cdk-overlay-container .mat-datepicker-popup,
+.cdk-overlay-pane .mat-calendar,
+.cdk-overlay-container .mat-calendar {
+  background-color: #FFFFFF !important; // Fondo blanco
+  color: #25282A !important; // Texto oscuro
+}
+
+// Estilos específicos del calendario
+.mat-calendar {
+  background-color: #FFFFFF !important; // Fondo blanco
+  color: #25282A !important; // Texto oscuro
+  
+  // Header del calendario (mes y año)
+  .mat-calendar-header {
+    background-color: #FFFFFF !important;
+    color: #25282A !important;
+    
+    .mat-calendar-period-button {
+      color: #25282A !important; // Texto oscuro para mes/año
+    }
+    
+    .mat-calendar-previous-button,
+    .mat-calendar-next-button {
+      color: #25282A !important; // Flechas de navegación oscuras
+    }
+  }
+  
+  // Días de la semana
+  .mat-calendar-table-header {
+    color: #25282A !important; // Texto oscuro
+    
+    th {
+      color: #25282A !important;
+    }
+  }
+  
+  // Celdas del calendario
+  .mat-calendar-body-cell {
+    color: #25282A !important; // Texto oscuro para las fechas
+    
+    .mat-calendar-body-cell-content {
+      color: #25282A !important; // Texto oscuro
+    }
+    
+    // Fecha seleccionada
+    &.mat-calendar-body-selected {
+      background-color: #FF682E !important; // Fondo naranja
+      color: #FFFFFF !important; // Texto blanco
+      
+      .mat-calendar-body-cell-content {
+        color: #FFFFFF !important; // Texto blanco
+      }
+    }
+    
+    // Fecha hoy (current date)
+    &.mat-calendar-body-today:not(.mat-calendar-body-selected) {
+      border-color: #FF682E !important; // Borde naranja
+      color: #25282A !important; // Texto oscuro
+      
+      .mat-calendar-body-cell-content {
+        color: #25282A !important;
+      }
+    }
+    
+    // Hover
+    &:hover:not(.mat-calendar-body-disabled) {
+      background-color: #F7F8FA !important; // Fondo gris claro
+      color: #25282A !important; // Texto oscuro
+      
+      .mat-calendar-body-cell-content {
+        color: #25282A !important;
+      }
+    }
+    
+    // Fechas deshabilitadas
+    &.mat-calendar-body-disabled {
+      color: #6B7280 !important; // Texto gris para fechas deshabilitadas
+      opacity: 0.5 !important;
+      
+      .mat-calendar-body-cell-content {
+        color: #6B7280 !important;
+      }
+    }
+  }
+  
+  // Mes anterior/siguiente (fechas fuera del mes actual)
+  .mat-calendar-body-preview {
+    color: #6B7280 !important; // Texto gris más claro
+    opacity: 0.5 !important;
+  }
+}
+

@@ -1,0 +1,82 @@
+<div class="historico-container">
+  <div class="header-actions">
+    <h2>Histórico de Asignaciones</h2>
+    <div class="button-group">
+      <button class="btn-secondary" (click)="exportarCsv()">
+        Exportar CSV
+      </button>
+    </div>
+  </div>
+
+  <div class="filtro-container">
+    <input
+      type="text"
+      class="filtro-input"
+      [(ngModel)]="filtroBusqueda"
+      (input)="aplicarFiltro()"
+      placeholder="Buscar por código, referencia, tipo o persona..."
+    />
+  </div>
+
+  <div class="historico-content">
+    <div class="activos-list">
+      <h3>Activos con Historial</h3>
+      <div class="activos-scroll">
+        <div 
+          *ngFor="let item of activosConHistorialFiltrados"
+          class="activo-item"
+          [class.selected]="activoSeleccionado?.id === item.activo?.id"
+          (click)="seleccionarActivo(item)">
+          <div class="activo-header">
+            <strong>{{ item.activo?.codigo || 'N/A' }}</strong>
+            <span class="badge badge-info">{{ item.historico.length }} asignación(es)</span>
+          </div>
+          <div class="activo-details">
+            <div>{{ item.activo?.referencia }}</div>
+            <div class="text-muted">{{ item.activo?.tipoNombre }}</div>
+          </div>
+        </div>
+        <div *ngIf="activosConHistorialFiltrados.length === 0" class="empty-state">
+          {{ filtroBusqueda ? 'No se encontraron resultados' : 'No hay activos con historial de asignaciones' }}
+        </div>
+      </div>
+    </div>
+
+    <div class="historico-detail" *ngIf="activoSeleccionado && historicoSeleccionado.length > 0">
+      <h3>Historial de {{ activoSeleccionado.codigo }}</h3>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Persona</th>
+              <th>Fecha Asignación</th>
+              <th>Fecha Devolución Prevista</th>
+              <th>Fecha Devolución</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let hist of historicoSeleccionado">
+              <td>{{ hist.persona }}</td>
+              <td>{{ hist.fechaAsignacion }}</td>
+              <td>{{ hist.fechaDevolucionPrevista }}</td>
+              <td>{{ hist.fechaDevolucion || '-' }}</td>
+              <td>
+                <span class="badge" [ngClass]="estaDevolvido(hist) ? 'badge-disponible' : 'badge-asignado'">
+                  {{ estaDevolvido(hist) ? 'Devuelto' : 'Asignado' }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="historico-detail empty" *ngIf="!activoSeleccionado">
+      <div class="empty-state-large">
+        <p>Seleccione un activo para ver su historial de asignaciones</p>
+      </div>
+    </div>
+  </div>
+</div>
+

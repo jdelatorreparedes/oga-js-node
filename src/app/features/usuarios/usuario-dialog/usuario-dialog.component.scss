@@ -1,0 +1,36 @@
+mat-dialog-content {
+  min-width: 450px;
+  padding: 20px 24px;
+  font-size: 14px;
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 16px;
+  
+  &:last-of-type {
+    margin-bottom: 0;
+  }
+}
+
+mat-checkbox {
+  margin-top: 8px;
+  margin-bottom: 16px;
+}
+
+mat-dialog-actions {
+  padding: 8px 24px 16px;
+  gap: 8px;
+}
+
+::ng-deep {
+  .mat-mdc-form-field {
+    font-size: 14px;
+  }
+  
+  .mat-mdc-dialog-title {
+    font-size: 20px;
+    font-weight: 600;
+  }
+}
+

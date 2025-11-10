@@ -1,0 +1,40 @@
+------------------------------------------------------------ 
+[INICIO] 10/11/2025 13:33:04,59 - Compilacion frontend 
+
+> gestion-activos@1.0.0 build
+> ng build
+
+- Generating browser application bundles (phase: setup)...
+√ Browser application bundle generation complete.
+√ Browser application bundle generation complete.
+- Copying assets...
+√ Copying assets complete.
+- Generating index html...
+√ Index html generation complete.
+
+Initial chunk files           | Names                               | Raw size | Estimated transfer size
+main.f896e15c932b7a7d.js      | main                                |  1.06 MB |               216.94 kB
+styles.86ceb9a169913dd2.css   | styles                              | 96.05 kB |                 9.38 kB
+polyfills.c7f0c0748d1e59e7.js | polyfills                           | 34.00 kB |                11.06 kB
+runtime.5644d1303b38137d.js   | runtime                             |  2.81 kB |                 1.37 kB
+
+                              | Initial total                       |  1.19 MB |               238.75 kB
+
+Lazy chunk files              | Names                               | Raw size | Estimated transfer size
+568.0aeb17ec655dd52b.js       | features-activos-activos-module     | 35.41 kB |                 7.46 kB
+771.b61e5c9fee015c42.js       | features-tipos-tipos-module         | 15.92 kB |                 4.28 kB
+892.13ebaf7d44103060.js       | features-usuarios-usuarios-module   | 15.13 kB |                 4.31 kB
+480.ade8574eb0c77ff8.js       | features-historico-historico-module |  9.37 kB |                 2.76 kB
+common.832c50cc580943c7.js    | common                              |  5.87 kB |                 1.96 kB
+319.dcafc950d3efa284.js       | features-login-login-module         |  4.33 kB |                 1.58 kB
+578.414b5d0f6aef59a4.js       | features-dashboard-dashboard-module |  3.18 kB |                 1.19 kB
+
+Build at: 2025-11-10T12:33:23.856Z - Hash: 4ec7209231b10e3d - Time: 16111ms
+
+Warning: bundle initial exceeded maximum budget. Budget 1.00 MB was not met by 191.38 kB with a total of 1.19 MB.
+
+
+Compilacion completada correctamente. 
+[INICIO] 10/11/2025 13:33:24,00 - Lanzamiento del servidor 
+[FIN] 10/11/2025 13:33:24,03 - Script completado 
+------------------------------------------------------------ 
