@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Home</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Home</h1>
+
+    
+
+
+
+    
+
+
+    <h3> </h3>
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+    <section>
+        <article><h1>Sistema de Gestión de Activos</h1>
+<p>Aplicación web desarrollada en Angular con backend Node.js/Express para la gestión de activos empresariales con almacenamiento compartido en servidor.</p>
+<h2>Características</h2>
+<ul>
+<li><strong>Tipos de Activos</strong>: Gestión completa de tipos de activos con CRUD, importación y exportación CSV</li>
+<li><strong>Activos</strong>: Gestión de activos con estados (Disponible, Asignado, Baja), asignaciones y devoluciones</li>
+<li><strong>Histórico</strong>: Visualización del historial completo de asignaciones y devoluciones</li>
+<li><strong>Almacenamiento en Servidor</strong>: Todos los datos se almacenan en SQLite en el servidor, permitiendo que todos los usuarios vean los mismos datos</li>
+<li><strong>Atajos de Teclado</strong>:
+<ul>
+<li><code>Shift + A</code>: Añadir nuevo elemento</li>
+<li><code>Enter</code>: Guardar en formularios</li>
+<li><code>Escape</code>: Cancelar operación</li>
+</ul>
+</li>
+</ul>
+<h2>Requisitos</h2>
+<ul>
+<li>Node.js (versión 18 o superior)</li>
+<li>npm o yarn</li>
+</ul>
+<h2>Instalación</h2>
+<h3>Backend (Servidor)</h3>
+<ol>
+<li>Navegar a la carpeta del servidor:</li>
+</ol>
+<pre class="prettyprint source lang-bash"><code>cd server
+</code></pre>
+<ol start="2">
+<li>Instalar dependencias:</li>
+</ol>
+<pre class="prettyprint source lang-bash"><code>npm install
+</code></pre>
+<ol start="3">
+<li>Iniciar el servidor:</li>
+</ol>
+<pre class="prettyprint source lang-bash"><code># Modo desarrollo (con nodemon)
+npm run dev
+
+# Modo producción
+npm start
+</code></pre>
+<p>El servidor estará disponible en <code>http://localhost:3000</code></p>
+<h3>Frontend (Angular)</h3>
+<ol>
+<li>En la raíz del proyecto, instalar dependencias:</li>
+</ol>
+<pre class="prettyprint source lang-bash"><code>npm install
+</code></pre>
+<ol start="2">
+<li>Iniciar el servidor de desarrollo:</li>
+</ol>
+<pre class="prettyprint source lang-bash"><code>npm start
+</code></pre>
+<ol start="3">
+<li>Abrir el navegador en <code>http://localhost:4200</code></li>
+</ol>
+<p><strong>Importante</strong>: Asegúrate de que el servidor backend esté corriendo antes de iniciar el frontend.</p>
+<h2>Estructura del Proyecto</h2>
+<pre class="prettyprint source"><code>.
+├── server/                 # Backend Node.js/Express
+│   ├── server.js          # Servidor principal
+│   ├── package.json
+│   └── activos.db         # Base de datos SQLite (se crea automáticamente)
+├── src/                   # Frontend Angular
+│   ├── app/
+│   │   ├── components/
+│   │   │   ├── tipos/     # Componente de tipos de activos
+│   │   │   ├── activos/   # Componente de activos
+│   │   │   └── historico/ # Componente de histórico
+│   │   ├── models/        # Modelos de datos
+│   │   ├── services/      # Servicios (HTTP, CSV, Activos)
+│   │   ├── config/        # Configuración (URL API)
+│   │   └── app.module.ts  # Módulo principal
+│   └── styles.css         # Estilos globales
+└── package.json           # Dependencias del frontend
+</code></pre>
+<h2>Configuración</h2>
+<p>La URL del servidor backend se configura en <code>src/app/config/api.config.ts</code>. Por defecto está configurada para <code>http://localhost:3000/api</code>.</p>
+<p>Si necesitas cambiar la URL del servidor, edita el archivo:</p>
+<pre class="prettyprint source lang-typescript"><code>export const API_CONFIG = {
+  baseUrl: 'http://tu-servidor:3000/api'
+};
+</code></pre>
+<h2>Funcionalidades por Sección</h2>
+<h3>Tipos</h3>
+<ul>
+<li>Añadir, editar y eliminar tipos de activos</li>
+<li>Exportar e importar CSV</li>
+<li>Atajo de teclado: Shift + A para añadir</li>
+</ul>
+<h3>Activos</h3>
+<ul>
+<li>Añadir activos con todos sus campos</li>
+<li>Estados: Disponible, Asignado, Baja</li>
+<li>Asignar activos a personas</li>
+<li>Devolver activos asignados</li>
+<li>Dar de baja activos (con motivo)</li>
+<li>Editar y eliminar activos</li>
+<li>Mostrar/ocultar activos dados de baja</li>
+<li>Exportar e importar CSV</li>
+</ul>
+<h3>Histórico</h3>
+<ul>
+<li>Visualizar todos los activos con historial</li>
+<li>Ver detalle de asignaciones y devoluciones por activo</li>
+<li>Exportar histórico a CSV</li>
+</ul>
+<h2>API Endpoints</h2>
+<h3>Tipos</h3>
+<ul>
+<li><code>GET /api/tipos</code> - Obtener todos los tipos</li>
+<li><code>POST /api/tipos</code> - Crear nuevo tipo</li>
+<li><code>PUT /api/tipos/:id</code> - Actualizar tipo</li>
+<li><code>DELETE /api/tipos/:id</code> - Eliminar tipo</li>
+</ul>
+<h3>Activos</h3>
+<ul>
+<li><code>GET /api/activos?mostrarBajas=true/false</code> - Obtener todos los activos</li>
+<li><code>GET /api/activos/:id</code> - Obtener un activo</li>
+<li><code>POST /api/activos</code> - Crear nuevo activo</li>
+<li><code>PUT /api/activos/:id</code> - Actualizar activo</li>
+<li><code>DELETE /api/activos/:id</code> - Eliminar activo</li>
+<li><code>POST /api/activos/:id/asignar</code> - Asignar activo</li>
+<li><code>POST /api/activos/:id/devolver</code> - Devolver activo</li>
+<li><code>POST /api/activos/:id/baja</code> - Dar de baja activo</li>
+</ul>
+<h3>Histórico</h3>
+<ul>
+<li><code>GET /api/historico</code> - Obtener todo el histórico</li>
+<li><code>GET /api/historico/activo/:id</code> - Obtener histórico de un activo</li>
+</ul>
+<h2>Tecnologías Utilizadas</h2>
+<h3>Frontend</h3>
+<ul>
+<li>Angular 17</li>
+<li>TypeScript</li>
+<li>CSS3</li>
+</ul>
+<h3>Backend</h3>
+<ul>
+<li>Node.js</li>
+<li>Express</li>
+<li>SQLite3</li>
+</ul>
+<h2>Notas</h2>
+<ul>
+<li>Los datos se almacenan en SQLite en el servidor</li>
+<li>Todos los usuarios comparten la misma base de datos</li>
+<li>La base de datos se crea automáticamente al iniciar el servidor por primera vez</li>
+<li>Para producción, considera usar PostgreSQL o MySQL en lugar de SQLite</li>
+</ul></article>
+    </section>
+
+
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-server.html">server</a></li></ul><h3>Classes</h3><ul><li><a href="Logger.html">Logger</a></li></ul><h3>Global</h3><ul><li><a href="global.html#authenticateToken">authenticateToken</a></li><li><a href="global.html#authorizeRoles">authorizeRoles</a></li><li><a href="global.html#optionalAuth">optionalAuth</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Mon Nov 10 2025 14:04:17 GMT+0100 (hora estándar de Europa central)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
