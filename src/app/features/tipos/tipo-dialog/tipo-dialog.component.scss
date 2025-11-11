@@ -1,27 +1,64 @@
 mat-dialog-content {
-  min-width: 450px; // Ancho suficiente para el label completo
+  min-width: 500px;
+  max-width: 600px;
+  max-height: 85vh;
   padding: 20px 24px;
+  font-size: 14px;
+  overflow-y: auto;
+  
+  @media (max-width: 768px) {
+    min-width: auto;
+    max-width: 100%;
+    padding: 16px;
+  }
+}
+
+.field-group {
+  margin-bottom: 16px;
+  
+  &:last-of-type {
+    margin-bottom: 0;
+  }
+}
+
+.field-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.87);
+  margin-bottom: 6px;
 }
 
 .full-width {
   width: 100%;
-  
-  // Asegurar que el label no se corte
-  ::ng-deep {
-    .mdc-floating-label {
-      white-space: nowrap !important;
-      overflow: visible !important;
-      text-overflow: clip !important;
-    }
-    
-    .mdc-notched-outline__notch {
-      max-width: calc(100% - 32px) !important;
-    }
-  }
+  margin-bottom: 0;
 }
 
 mat-dialog-actions {
   padding: 8px 24px 16px;
   gap: 8px;
+}
+
+::ng-deep {
+  .mat-mdc-form-field {
+    font-size: 14px;
+    margin-bottom: 0;
+  }
+  
+  .mat-mdc-dialog-title {
+    font-size: 20px;
+    font-weight: 600;
+  }
+  
+  .mat-mdc-dialog-container {
+    max-height: 90vh;
+  }
+  
+  // Asegurar que los placeholders se vean correctamente
+  .mat-mdc-select-placeholder,
+  .mat-mdc-input-element::placeholder {
+    color: var(--orbita-text-secondary) !important;
+    opacity: 0.7 !important;
+  }
 }
 

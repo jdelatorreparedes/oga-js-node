@@ -7,9 +7,11 @@
 <mat-dialog-actions align="end">
   <button mat-button (click)="onCancel()">{{ data.cancelText }}</button>
   <button 
+    #confirmButton
     mat-raised-button 
     [color]="data.confirmColor"
-    (click)="onConfirm()">
+    (click)="onConfirm()"
+    (keydown.enter)="onConfirm()">
     {{ data.confirmText }}
   </button>
 </mat-dialog-actions>

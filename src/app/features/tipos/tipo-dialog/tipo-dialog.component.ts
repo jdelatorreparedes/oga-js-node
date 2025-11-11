@@ -29,13 +29,17 @@ export class TipoDialogComponent implements OnInit, AfterViewChecked {
     private snackbarService: SnackbarService
   ) {
     this.form = this.fb.group({
-      nombre: ['', [Validators.required, Validators.minLength(1)]]
+      nombre: ['', [Validators.required, Validators.minLength(1)]],
+      codificacion: ['']
     });
   }
 
   ngOnInit(): void {
     if (this.data.tipo) {
-      this.form.patchValue({ nombre: this.data.tipo.nombre });
+      this.form.patchValue({ 
+        nombre: this.data.tipo.nombre,
+        codificacion: this.data.tipo.codificacion || ''
+      });
     }
   }
 
@@ -64,12 +68,14 @@ export class TipoDialogComponent implements OnInit, AfterViewChecked {
     }
 
     const nombreTrimmed = this.form.value.nombre.trim();
+    const codificacionTrimmed = (this.form.value.codificacion || '').trim();
+    
     if (!nombreTrimmed) {
       this.snackbarService.showWarning('El nombre no puede estar vacío');
       return;
     }
 
-    // Validar nombre único
+    // Validar nombre único y codificacion única
     this.activosService.getTipos().subscribe({
       next: (tipos) => {
         const nombreExiste = tipos.some(t => 
@@ -82,11 +88,30 @@ export class TipoDialogComponent implements OnInit, AfterViewChecked {
           return;
         }
 
+        // Validar codificacion única (si se proporciona)
+        if (codificacionTrimmed) {
+          const codificacionExiste = tipos.some(t => 
+            t.codificacion && 
+            t.codificacion.trim().toUpperCase() === codificacionTrimmed.toUpperCase() &&
+            (!this.data.tipo || t.id !== this.data.tipo.id)
+          );
+
+          if (codificacionExiste) {
+            this.snackbarService.showError('Ya existe un tipo con esta codificación. La codificación debe ser única.');
+            this.form.get('codificacion')?.setErrors({ duplicado: true });
+            return;
+          }
+        }
+
         this.guardando = true;
 
         if (this.data.tipo) {
           // Actualizar
-          const tipoActualizado = { ...this.data.tipo, nombre: nombreTrimmed };
+          const tipoActualizado = { 
+            ...this.data.tipo, 
+            nombre: nombreTrimmed,
+            codificacion: codificacionTrimmed || null
+          };
           this.activosService.updateTipo(tipoActualizado).subscribe({
             next: () => {
               this.snackbarService.showSuccess('Tipo actualizado correctamente');
@@ -100,7 +125,10 @@ export class TipoDialogComponent implements OnInit, AfterViewChecked {
           });
         } else {
           // Crear
-          const nuevoTipo: TipoActivo = { nombre: nombreTrimmed };
+          const nuevoTipo: TipoActivo = { 
+            nombre: nombreTrimmed,
+            codificacion: codificacionTrimmed || undefined
+          };
           this.activosService.addTipo(nuevoTipo).subscribe({
             next: () => {
               this.snackbarService.showSuccess('Tipo creado correctamente');

@@ -1,9 +1,17 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewChecked, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiService } from '../../../core/services/api.service';
 import { SnackbarService } from '../../services/snackbar.service';
 import { AuthService } from '../../../core/services/auth.service';
+
+/**
+ * Datos del diálogo de cambio de contraseña
+ */
+export interface ChangePasswordDialogData {
+  userId?: number;
+  isFirstLogin?: boolean;
+}
 
 /**
  * Diálogo para cambiar contraseña del usuario actual
@@ -16,6 +24,7 @@ import { AuthService } from '../../../core/services/auth.service';
 export class ChangePasswordDialogComponent implements OnInit, AfterViewChecked {
   form: FormGroup;
   guardando = false;
+  isFirstLogin = false;
   private debeEnfocar = true;
 
   @ViewChild('currentPasswordInput') currentPasswordInput!: ElementRef;
@@ -23,12 +32,18 @@ export class ChangePasswordDialogComponent implements OnInit, AfterViewChecked {
   constructor(
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<ChangePasswordDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: ChangePasswordDialogData,
     private api: ApiService,
     private snackbarService: SnackbarService,
     private authService: AuthService
   ) {
+    this.isFirstLogin = data?.isFirstLogin || false;
+    
+    // Si es el primer login, pre-llenar la contraseña actual con "orbita"
+    const currentPasswordValue = this.isFirstLogin ? 'orbita' : '';
+    
     this.form = this.fb.group({
-      currentPassword: ['', [Validators.required]],
+      currentPassword: [currentPasswordValue, [Validators.required]],
       newPassword: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', [Validators.required]]
     }, { validators: this.passwordMatchValidator });
@@ -66,8 +81,9 @@ export class ChangePasswordDialogComponent implements OnInit, AfterViewChecked {
       return;
     }
 
-    const currentUser = this.authService.currentUserValue;
-    if (!currentUser || !currentUser.id) {
+    // Usar el userId del data si está disponible (primer login), sino usar el usuario actual
+    const userId = this.data?.userId || this.authService.currentUserValue?.id;
+    if (!userId) {
       this.snackbarService.showError('No se pudo identificar al usuario');
       return;
     }
@@ -79,7 +95,7 @@ export class ChangePasswordDialogComponent implements OnInit, AfterViewChecked {
 
     this.guardando = true;
 
-    this.api.post(`usuarios/${currentUser.id}/change-password`, passwordData).subscribe({
+    this.api.post(`usuarios/${userId}/change-password`, passwordData).subscribe({
       next: () => {
         this.snackbarService.showSuccess('Contraseña cambiada correctamente');
         this.dialogRef.close(true);

@@ -6,10 +6,13 @@
     class="sidebar"
     [style.width.px]="isCollapsed ? 64 : 250">
     
+    <!-- Header del Sidebar con Logo Corporativo -->
     <div class="sidebar-header">
       <div class="logo" *ngIf="!isCollapsed">
-        <h2>Órbita</h2>
-        <span class="subtitle">Gestión Activos</span>
+        <div class="logo-text">
+          <h2 class="logo-main">OGA</h2>
+          <span class="logo-claim">ÓRBITA GESTIÓN DE ACTIVOS</span>
+        </div>
       </div>
       <button 
         mat-icon-button 

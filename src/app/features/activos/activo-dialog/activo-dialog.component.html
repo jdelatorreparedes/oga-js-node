@@ -3,7 +3,7 @@
 <mat-dialog-content>
   <form [formGroup]="form" (ngSubmit)="guardar()">
     <div class="field-group">
-      <label class="field-label">Tipo de activo</label>
+      <label class="field-label">Tipo de activo <span class="required-asterisk">*</span></label>
       <mat-form-field appearance="outline" class="full-width">
         <mat-select #tipoSelect formControlName="tipoId" placeholder="Seleccione el tipo de activo" required>
           <mat-option *ngFor="let tipo of tipos" [value]="tipo.id">{{ tipo.nombre }}</mat-option>
@@ -22,18 +22,29 @@
     </div>
 
     <div class="field-group">
-      <label class="field-label">Código</label>
+      <label class="field-label">
+        Código 
+        <span class="required-asterisk" *ngIf="data.activo">*</span>
+      </label>
       <mat-form-field appearance="outline" class="full-width">
         <input
           matInput
           formControlName="codigo"
-          placeholder="Ingrese el código del activo"
-          required>
+          [placeholder]="data.activo ? 'Ingrese el código del activo' : 'Se generará automáticamente al seleccionar el tipo'"
+          [required]="!!data.activo">
+        <mat-hint *ngIf="!data.activo">Se generará automáticamente basado en la codificación del tipo</mat-hint>
+        <mat-hint *ngIf="data.activo && form.get('tipoId')?.value">Formato: {{ getCodificacionTipo() }}0001 (codificación + 4 dígitos)</mat-hint>
         <mat-error *ngIf="form.get('codigo')?.hasError('required')">
-          El código es obligatorio
+          El código es obligatorio al editar un activo
         </mat-error>
         <mat-error *ngIf="form.get('codigo')?.hasError('minlength')">
           El código debe tener al menos 1 carácter
+        </mat-error>
+        <mat-error *ngIf="form.get('codigo')?.hasError('formatoInvalido')">
+          El código no cumple con el formato requerido (codificación + 4 dígitos)
+        </mat-error>
+        <mat-error *ngIf="form.get('codigo')?.hasError('duplicado')">
+          Ya existe un activo con este código
         </mat-error>
       </mat-form-field>
     </div>

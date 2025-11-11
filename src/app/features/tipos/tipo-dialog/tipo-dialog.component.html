@@ -2,19 +2,37 @@
 
 <mat-dialog-content>
   <form [formGroup]="form" (ngSubmit)="guardar()">
-    <mat-form-field appearance="outline" class="full-width">
-      <input 
-        #nombreInput
-        matInput 
-        formControlName="nombre"
-        required>
-      <mat-error *ngIf="form.get('nombre')?.hasError('required')">
-        El nombre es obligatorio
-      </mat-error>
-      <mat-error *ngIf="form.get('nombre')?.hasError('minlength')">
-        El nombre debe tener al menos 1 carácter
-      </mat-error>
-    </mat-form-field>
+    <div class="field-group">
+      <label class="field-label">Nombre</label>
+      <mat-form-field appearance="outline" class="full-width">
+        <input 
+          #nombreInput
+          matInput 
+          formControlName="nombre"
+          placeholder="Ingrese el nombre del tipo"
+          required>
+        <mat-error *ngIf="form.get('nombre')?.hasError('required')">
+          El nombre es obligatorio
+        </mat-error>
+        <mat-error *ngIf="form.get('nombre')?.hasError('minlength')">
+          El nombre debe tener al menos 1 carácter
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Codificación</label>
+      <mat-form-field appearance="outline" class="full-width">
+        <input 
+          matInput 
+          formControlName="codificacion"
+          placeholder="Ej: LAP, CAM, OPT - Usada para generar códigos automáticos de activos (debe ser única)"
+          maxlength="50">
+        <mat-error *ngIf="form.get('codificacion')?.hasError('duplicado')">
+          Ya existe un tipo con esta codificación
+        </mat-error>
+      </mat-form-field>
+    </div>
   </form>
 </mat-dialog-content>
 

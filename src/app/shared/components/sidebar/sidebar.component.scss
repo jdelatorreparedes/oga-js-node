@@ -1,102 +1,135 @@
+/* ============================================
+   SIDEBAR CONTAINER
+   ============================================ */
 .sidebar-container {
   height: 100vh;
 }
 
+/* ============================================
+   SIDEBAR - MENÚ LATERAL CORPORATIVO
+   ============================================ */
 .sidebar {
-  background-color: var(--orbita-primary);
+  background-color: var(--orbita-pantone-426c);
   color: var(--orbita-text-white);
-  box-shadow: var(--orbita-shadow-md);
+  box-shadow: var(--orbita-shadow-lg);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+/* ============================================
+   HEADER DEL SIDEBAR CON LOGO
+   ============================================ */
 .sidebar-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 12px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  min-height: 70px;
-  gap: 8px;
+  padding: 20px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  min-height: 80px;
+  gap: 12px;
+  background: linear-gradient(135deg, var(--orbita-pantone-426c) 0%, rgba(29, 29, 27, 0.95) 100%);
 }
 
 .logo {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  gap: 12px;
   flex: 1;
-  h2 {
+  
+  .logo-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+  }
+  
+  .logo-main {
     margin: 0;
     font-family: 'Montserrat', sans-serif;
-    font-weight: 700;
-    font-size: 20px; // Tamaño más apropiado
-    color: var(--orbita-text-white);
+    font-weight: 700; /* Bold según especificación */
+    font-size: 18px;
+    color: var(--orbita-white);
     line-height: 1.2;
+    letter-spacing: 0.5px;
   }
-  .subtitle {
-    font-size: 11px; // Tamaño apropiado para subtítulo
-    color: rgba(255, 255, 255, 0.7);
-    font-weight: 400;
+  
+  .logo-claim {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 8px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.85);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
     margin-top: 2px;
+    line-height: 1.3;
   }
 }
 
+/* ============================================
+   BOTÓN TOGGLE DEL SIDEBAR
+   ============================================ */
 .toggle-btn {
   color: var(--orbita-text-white);
   background-color: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
+  border-radius: 6px;
   margin-left: 8px;
-  transition: background-color 0.2s ease;
+  transition: all var(--orbita-transition-fast);
   
   &:hover {
     background-color: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
   }
   
   mat-icon {
-    font-size: 20px; // Tamaño de icono apropiado
+    font-size: 20px;
     width: 20px;
     height: 20px;
+    transition: transform var(--orbita-transition-fast);
+  }
+  
+  &:hover mat-icon {
+    transform: translateX(2px);
   }
 }
 
+/* ============================================
+   NAVEGACIÓN DEL SIDEBAR
+   ============================================ */
 .sidebar-nav {
-  padding: 8px 0;
+  padding: 12px 0;
   
   .nav-item {
-    color: rgba(255, 255, 255, 0.9);
-    transition: all 0.2s ease;
+    color: rgba(255, 255, 255, 0.85);
+    transition: all var(--orbita-transition-fast);
     display: flex;
     align-items: center;
-    padding: 12px 16px;
+    padding: 14px 20px;
     text-decoration: none;
+    margin: 4px 8px;
+    border-radius: 8px;
+    position: relative;
     
     ::ng-deep {
       .mat-mdc-list-item-icon {
-        color: rgba(255, 255, 255, 0.9);
+        color: rgba(255, 255, 255, 0.85);
         margin-right: 16px;
         flex-shrink: 0;
+        transition: all var(--orbita-transition-fast);
       }
     }
     
     .nav-label {
+      font-family: 'Montserrat', sans-serif;
       font-weight: 500;
-      font-size: 15px; // Tamaño legible
+      font-size: 15px;
       color: rgba(255, 255, 255, 0.9);
       white-space: nowrap;
       overflow: visible;
+      transition: all var(--orbita-transition-fast);
     }
     
+    /* Efecto hover mejorado */
     &:hover {
-      background-color: rgba(255, 255, 255, 0.1);
-      
-      .nav-label {
-        color: var(--orbita-text-white);
-      }
-      
-      ::ng-deep .mat-mdc-list-item-icon {
-        color: var(--orbita-text-white);
-      }
-    }
-    
-    &.active {
-      background-color: var(--orbita-accent);
+      background-color: rgba(255, 255, 255, 0.12);
+      transform: translateX(4px);
       
       .nav-label {
         color: var(--orbita-text-white);
@@ -105,6 +138,35 @@
       
       ::ng-deep .mat-mdc-list-item-icon {
         color: var(--orbita-text-white);
+        transform: scale(1.1);
+      }
+    }
+    
+    /* Estado activo con color corporativo naranja */
+    &.active {
+      background-color: var(--orbita-pantone-165c);
+      box-shadow: 0 4px 12px rgba(255, 106, 19, 0.3);
+      
+      .nav-label {
+        color: var(--orbita-text-white);
+        font-weight: 700;
+      }
+      
+      ::ng-deep .mat-mdc-list-item-icon {
+        color: var(--orbita-text-white);
+      }
+      
+      /* Indicador lateral sutil */
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 4px;
+        height: 60%;
+        background-color: var(--orbita-white);
+        border-radius: 0 4px 4px 0;
       }
     }
   }

@@ -11,15 +11,15 @@
           <mat-icon>add</mat-icon>
           Añadir
         </button>
-        <button mat-stroked-button (click)="exportarCsv()">
+        <button mat-stroked-button (click)="exportarExcel()">
           <mat-icon>download</mat-icon>
-          Exportar CSV
+          Exportar
         </button>
         <button 
           *ngIf="authService.canPerformActions()"
-          mat-stroked-button (click)="importarCsv()">
+          mat-stroked-button (click)="importarExcel()">
           <mat-icon>upload</mat-icon>
-          Importar CSV
+          Importar
         </button>
       </div>
   </div>
@@ -41,6 +41,12 @@
       <ng-container matColumnDef="nombre">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>NOMBRE</th>
         <td mat-cell *matCellDef="let tipo">{{ tipo.nombre }}</td>
+      </ng-container>
+
+      <!-- Codificacion Column -->
+      <ng-container matColumnDef="codificacion">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>CODIFICACIÓN</th>
+        <td mat-cell *matCellDef="let tipo">{{ tipo.codificacion || '-' }}</td>
       </ng-container>
 
       <!-- Acciones Column -->
@@ -83,6 +89,7 @@
 
     <mat-paginator 
       [pageSizeOptions]="[5, 10, 20, 50]" 
+      [pageSize]="10"
       showFirstLastButtons>
     </mat-paginator>
   </mat-card>

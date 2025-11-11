@@ -68,40 +68,140 @@ table {
 }
 
 .mat-column-acciones {
-  button {
-    width: 40px;
-    height: 40px;
-    border-radius: 50% !important;
-    min-width: 40px !important;
-    padding: 0 !important;
+  width: auto;
+  text-align: center;
+  
+  .acciones-cell {
+    padding: 8px !important;
+  }
+  
+  .acciones-buttons {
+    display: flex;
+    gap: 4px; // Espaciado estandarizado igual que en activos
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
     
-    &::before {
+    button {
+      width: 36px;
+      height: 36px;
       border-radius: 50% !important;
-    }
-    
-    .mat-mdc-button-persistent-ripple,
-    .mdc-ripple-surface {
-      border-radius: 50% !important;
-    }
-    
-    &.mat-warn {
-      background-color: #dc2626 !important;
-      color: #ffffff !important;
+      min-width: 36px !important;
+      padding: 0 !important;
       
-      &:hover {
-        background-color: #b91c1c !important;
+      &::before {
+        border-radius: 50% !important;
+      }
+      
+      .mat-mdc-button-persistent-ripple,
+      .mdc-ripple-surface {
+        border-radius: 50% !important;
+      }
+      
+      &.mat-warn {
+        background-color: #dc2626 !important;
+        color: #ffffff !important;
+        
+        &:hover {
+          background-color: #b91c1c !important;
+        }
+        
+        mat-icon {
+          color: #ffffff !important;
+        }
       }
       
       mat-icon {
-        color: #ffffff !important;
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        line-height: 18px;
       }
     }
+  }
+}
+
+/* ============================================
+   ESTILOS RESPONSIVE - MÓVIL
+   ============================================ */
+@media (max-width: 768px) {
+  .usuarios-container {
+    padding: 0 16px;
+  }
+  
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
     
-    mat-icon {
+    h1 {
       font-size: 20px;
-      width: 20px;
-      height: 20px;
-      line-height: 20px;
+      width: 100%;
+    }
+    
+    .actions {
+      width: 100%;
+      flex-wrap: wrap;
+      gap: 8px;
+      
+      button {
+        flex: 1;
+        min-width: calc(50% - 4px);
+        padding: 0 12px;
+        font-size: 13px;
+        
+        mat-icon {
+          font-size: 16px;
+          width: 16px;
+          height: 16px;
+        }
+        
+        span {
+          display: none; // Solo iconos en móvil
+        }
+      }
+    }
+  }
+  
+  .filter-card {
+    padding: 12px;
+  }
+  
+  .table-card {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  table {
+    min-width: 500px; // Ancho mínimo para la tabla
+    font-size: 12px;
+  }
+  
+  .mat-column-acciones {
+    min-width: 120px;
+    
+    .acciones-buttons {
+      button {
+        width: 32px;
+        height: 32px;
+        min-width: 32px;
+        
+        mat-icon {
+          font-size: 16px;
+          width: 16px;
+          height: 16px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .page-header {
+    .actions {
+      button {
+        min-width: calc(33.333% - 6px);
+      }
     }
   }
 }

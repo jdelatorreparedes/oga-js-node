@@ -2,6 +2,11 @@ mat-dialog-content {
   min-width: 500px; // Ancho suficiente para evitar cortes
   padding: 20px 24px;
   font-size: 14px; // Asegurar tamaño legible
+  
+  @media (max-width: 768px) {
+    min-width: auto;
+    padding: 16px;
+  }
 }
 
 .full-width {

@@ -41,6 +41,10 @@ export class DbService {
     return this.http.get<Activo>(`${this.apiUrl}/activos/${id}`);
   }
 
+  getSiguienteCodigo(tipoId: number): Observable<{ codigo: string }> {
+    return this.http.get<{ codigo: string }>(`${this.apiUrl}/activos/siguiente-codigo/${tipoId}`);
+  }
+
   addActivo(activo: Activo): Observable<Activo> {
     return this.http.post<Activo>(`${this.apiUrl}/activos`, activo);
   }

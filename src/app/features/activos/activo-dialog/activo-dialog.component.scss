@@ -1,10 +1,16 @@
 mat-dialog-content {
-  min-width: 500px;
-  max-width: 600px;
-  max-height: 85vh; // Evitar que el diálogo sea demasiado alto
-  padding: 20px 24px;
+  min-width: 800px;
+  max-width: 900px;
+  max-height: 85vh; // Aumentar altura para evitar scroll
+  padding: 24px 32px;
   font-size: 14px; // Asegurar tamaño legible
   overflow-y: auto; // Permitir scroll solo si es necesario
+  
+  @media (max-width: 768px) {
+    min-width: auto;
+    max-width: 100%;
+    padding: 16px;
+  }
 }
 
 .field-group {
@@ -21,6 +27,12 @@ mat-dialog-content {
   font-weight: 500;
   color: rgba(0, 0, 0, 0.87);
   margin-bottom: 6px;
+  
+  .required-asterisk {
+    color: var(--orbita-pantone-165c);
+    font-weight: 700;
+    margin-left: 2px;
+  }
 }
 
 .full-width {
@@ -45,7 +57,7 @@ mat-dialog-actions {
   }
   
   .mat-mdc-dialog-container {
-    max-height: 90vh; // Limitar altura máxima del diálogo
+    max-height: 95vh; // Limitar altura máxima del diálogo
   }
   
   // Asegurar que los placeholders se vean correctamente

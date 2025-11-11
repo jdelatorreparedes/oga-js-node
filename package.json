@@ -1,6 +1,6 @@
 {
   "name": "gestion-activos",
-  "version": "1.0.0",
+  "version": "10.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -24,6 +24,7 @@
     "@angular/router": "^17.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
+    "xlsx": "^0.18.5",
     "zone.js": "~0.14.2"
   },
   "devDependencies": {
@@ -31,6 +32,7 @@
     "@angular/cli": "^17.0.0",
     "@angular/compiler-cli": "^17.0.0",
     "@types/node": "^20.0.0",
+    "@types/xlsx": "^0.0.35",
     "typedoc": "^0.28.14",
     "typescript": "~5.2.0"
   }

@@ -2,9 +2,9 @@
   <div class="page-header">
     <h1>Histórico de Asignaciones</h1>
     <div class="actions">
-      <button mat-raised-button (click)="exportarCsv()">
+      <button mat-raised-button (click)="exportarExcel()">
         <mat-icon>download</mat-icon>
-        Exportar CSV
+        Exportar
       </button>
     </div>
   </div>
@@ -85,6 +85,7 @@
 
     <mat-paginator 
       [pageSizeOptions]="[5, 10, 20, 50]" 
+      [pageSize]="10"
       showFirstLastButtons>
     </mat-paginator>
   </mat-card>

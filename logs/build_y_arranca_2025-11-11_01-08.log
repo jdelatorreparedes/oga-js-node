@@ -1,0 +1,43 @@
+------------------------------------------------------------ 
+[INICIO] 11/11/2025  1:08:57,09 - Compilacion frontend 
+
+> gestion-activos@10.0.0 build
+> ng build
+
+- Generating browser application bundles (phase: setup)...
+√ Browser application bundle generation complete.
+√ Browser application bundle generation complete.
+- Copying assets...
+√ Copying assets complete.
+- Generating index html...
+√ Index html generation complete.
+
+Initial chunk files           | Names                               |  Raw size | Estimated transfer size
+main.bc41ccd6f20f908c.js      | main                                |   1.06 MB |               218.06 kB
+styles.cab1637b92a95d32.css   | styles                              |  98.12 kB |                 9.74 kB
+polyfills.c7f0c0748d1e59e7.js | polyfills                           |  34.00 kB |                11.06 kB
+runtime.b81055037bf0f52b.js   | runtime                             |   2.83 kB |                 1.38 kB
+
+                              | Initial total                       |   1.20 MB |               240.24 kB
+
+Lazy chunk files              | Names                               |  Raw size | Estimated transfer size
+952.bd10d5f944743ecd.js       | features-tipos-tipos-module         | 410.85 kB |               115.41 kB
+568.1eddab44efea7f01.js       | features-activos-activos-module     |  41.58 kB |                 8.92 kB
+892.ec931317f8729909.js       | features-usuarios-usuarios-module   |  18.40 kB |                 5.04 kB
+771.c2c5941a9d1c1417.js       | features-tipos-tipos-module         |  17.99 kB |                 4.79 kB
+480.f68f0bb0fe04dc33.js       | features-historico-historico-module |   9.40 kB |                 2.75 kB
+319.55b923fd6a351644.js       | features-login-login-module         |   6.86 kB |                 2.20 kB
+common.04860647cc6f0e67.js    | common                              |   4.99 kB |                 1.54 kB
+578.d2faecc30db4846b.js       | features-dashboard-dashboard-module |   3.74 kB |                 1.31 kB
+
+Build at: 2025-11-11T00:09:16.691Z - Hash: da14146c55784085 - Time: 15080ms
+
+Warning: D:/GIT/oga-js-node/src/app/shared/components/topbar/topbar.component.scss exceeded maximum budget. Budget 3.00 kB was not met by 1.15 kB with a total of 4.15 kB.
+
+Warning: bundle initial exceeded maximum budget. Budget 1.00 MB was not met by 200.06 kB with a total of 1.20 MB.
+
+
+Compilacion completada correctamente. 
+[INICIO] 11/11/2025  1:09:16,87 - Lanzamiento del servidor 
+[FIN] 11/11/2025  1:09:16,91 - Script completado 
+------------------------------------------------------------ 

@@ -4,10 +4,12 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
 import { ApiService } from '../../core/services/api.service';
+import { ExcelService } from '../../services/excel.service';
 import { SnackbarService } from '../../shared/services/snackbar.service';
 import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
 import { Usuario, Rol } from '../../models/usuario.model';
 import { UsuarioDialogComponent, UsuarioDialogData } from './usuario-dialog/usuario-dialog.component';
+import { firstValueFrom } from 'rxjs';
 
 /**
  * Componente de gestión de usuarios
@@ -28,6 +30,7 @@ export class UsuariosComponent implements OnInit, AfterViewInit {
 
   constructor(
     private api: ApiService,
+    private excelService: ExcelService,
     private dialog: MatDialog,
     private snackbarService: SnackbarService
   ) {}
@@ -94,6 +97,7 @@ export class UsuariosComponent implements OnInit, AfterViewInit {
   abrirModalAnadir(): void {
     const dialogRef = this.dialog.open(UsuarioDialogComponent, {
       width: '500px',
+      maxWidth: '90vw',
       data: { usuario: null } as UsuarioDialogData
     });
 
@@ -107,6 +111,7 @@ export class UsuariosComponent implements OnInit, AfterViewInit {
   abrirModalEditar(usuario: Usuario): void {
     const dialogRef = this.dialog.open(UsuarioDialogComponent, {
       width: '500px',
+      maxWidth: '90vw',
       data: { usuario: { ...usuario } }
     });
 
@@ -120,6 +125,7 @@ export class UsuariosComponent implements OnInit, AfterViewInit {
   eliminar(usuario: Usuario): void {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '400px',
+      maxWidth: '90vw',
       data: {
         title: 'Eliminar Usuario',
         message: `¿Está seguro de eliminar el usuario "${usuario.username}"?`,
@@ -143,6 +149,122 @@ export class UsuariosComponent implements OnInit, AfterViewInit {
         });
       }
     });
+  }
+
+  exportarExcel(): void {
+    const headers = ['Usuario', 'Rol', 'Estado'];
+    const data = this.dataSource.filteredData.map(usuario => ({
+      'Usuario': usuario.username,
+      'Rol': usuario.rol,
+      'Estado': usuario.activo ? 'Activo' : 'Deshabilitado'
+    }));
+    this.excelService.exportToExcel(data, 'usuarios', headers);
+    this.snackbarService.showSuccess('Excel exportado correctamente');
+  }
+
+  importarExcel(): void {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.xlsx,.xls';
+    input.onchange = (event: any) => {
+      const file = event.target.files[0];
+      if (file) {
+        this.excelService.importFromExcel(file).then((data) => {
+          if (data.length === 0) {
+            this.snackbarService.showInfo('El archivo Excel está vacío o no contiene datos válidos');
+            return;
+          }
+
+          // Obtener usuarios existentes para comparar
+          this.api.get<Usuario[]>('usuarios').subscribe({
+            next: (usuariosExistentes) => {
+              const promesas: Promise<any>[] = [];
+              let usuariosNuevos = 0;
+              let usuariosDuplicados = 0;
+              let errores = 0;
+
+              // Procesar cada fila del Excel
+              data.forEach((row: any) => {
+                // Mapear los nombres de columnas (pueden variar)
+                const username = (row['Usuario'] || row['usuario'] || row['username'] || row['Column1'] || '').trim();
+                if (!username) return; // Saltar filas sin usuario
+
+                // Verificar si el usuario ya existe
+                const existe = usuariosExistentes.some(u => 
+                  u.username.toLowerCase() === username.toLowerCase()
+                );
+
+                if (!existe) {
+                  // Mapear el rol (con valores por defecto)
+                  const rolStr = (row['Rol'] || row['rol'] || row['Column2'] || 'Usuario').trim();
+                  let rol: Rol = Rol.Usuario;
+                  
+                  // Validar y mapear el rol
+                  if (rolStr === 'Administrador' || rolStr === 'administrador') {
+                    rol = Rol.Administrador;
+                  } else if (rolStr === 'Visor' || rolStr === 'visor') {
+                    rol = Rol.Visor;
+                  } else {
+                    rol = Rol.Usuario;
+                  }
+
+                  // Mapear el estado (por defecto Activo)
+                  const estadoStr = (row['Estado'] || row['estado'] || row['Column3'] || 'Activo').trim();
+                  const activo = estadoStr.toLowerCase() === 'activo' || estadoStr.toLowerCase() === 'true' || estadoStr === '1';
+
+                  // Crear nuevo usuario con contraseña por defecto "orbita"
+                  const nuevoUsuario: Usuario = {
+                    username: username,
+                    password: 'orbita', // Contraseña por defecto
+                    rol: rol,
+                    activo: activo
+                  };
+
+                  const promesa = firstValueFrom(this.api.post('usuarios', nuevoUsuario))
+                    .then(() => {
+                      usuariosNuevos++;
+                    })
+                    .catch((error) => {
+                      console.error('Error al añadir usuario:', error);
+                      errores++;
+                    });
+                  
+                  promesas.push(promesa);
+                } else {
+                  usuariosDuplicados++;
+                }
+              });
+
+              // Esperar a que todas las peticiones se completen
+              Promise.all(promesas).then(() => {
+                if (usuariosNuevos > 0) {
+                  this.snackbarService.showSuccess(`${usuariosNuevos} usuario(s) importado(s) correctamente. La contraseña por defecto es "orbita".`);
+                } else if (usuariosDuplicados > 0) {
+                  this.snackbarService.showInfo('No se encontraron usuarios nuevos para importar');
+                } else if (errores > 0) {
+                  this.snackbarService.showError(`Error al importar ${errores} usuario(s)`);
+                } else {
+                  this.snackbarService.showInfo('El archivo Excel está vacío o no contiene datos válidos');
+                }
+                this.cargarUsuarios();
+              }).catch((error) => {
+                console.error('Error al importar usuarios:', error);
+                this.snackbarService.showError('Error al importar algunos usuarios');
+                this.cargarUsuarios();
+              });
+            },
+            error: (error) => {
+              console.error('Error al cargar usuarios existentes:', error);
+              this.snackbarService.showError('Error al cargar los usuarios existentes');
+            }
+          });
+        }).catch((error) => {
+          console.error('Error al importar Excel:', error);
+          this.snackbarService.showError('Error al importar el archivo Excel');
+        });
+      }
+    };
+    input.click();
   }
 }
 

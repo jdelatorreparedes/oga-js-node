@@ -1,0 +1,41 @@
+------------------------------------------------------------ 
+[INICIO] 11/11/2025  0:58:53,31 - Compilacion frontend 
+
+> gestion-activos@10.0.0 build
+> ng build
+
+- Generating browser application bundles (phase: setup)...
+√ Browser application bundle generation complete.
+√ Browser application bundle generation complete.
+- Copying assets...
+√ Copying assets complete.
+- Generating index html...
+√ Index html generation complete.
+
+Initial chunk files           | Names                               |  Raw size | Estimated transfer size
+main.bb8020c164165395.js      | main                                |   1.06 MB |               217.80 kB
+styles.cab1637b92a95d32.css   | styles                              |  98.12 kB |                 9.74 kB
+polyfills.c7f0c0748d1e59e7.js | polyfills                           |  34.00 kB |                11.06 kB
+runtime.637d38aa32ada105.js   | runtime                             |   2.83 kB |                 1.38 kB
+
+                              | Initial total                       |   1.19 MB |               239.98 kB
+
+Lazy chunk files              | Names                               |  Raw size | Estimated transfer size
+952.bd10d5f944743ecd.js       | features-tipos-tipos-module         | 410.85 kB |               115.41 kB
+568.1eddab44efea7f01.js       | features-activos-activos-module     |  41.58 kB |                 8.92 kB
+892.ec931317f8729909.js       | features-usuarios-usuarios-module   |  18.40 kB |                 5.04 kB
+771.c2c5941a9d1c1417.js       | features-tipos-tipos-module         |  17.99 kB |                 4.79 kB
+480.f68f0bb0fe04dc33.js       | features-historico-historico-module |   9.40 kB |                 2.75 kB
+319.55b923fd6a351644.js       | features-login-login-module         |   6.86 kB |                 2.20 kB
+common.04860647cc6f0e67.js    | common                              |   4.99 kB |                 1.54 kB
+578.36e8fcb826d5bcd8.js       | features-dashboard-dashboard-module |   3.74 kB |                 1.31 kB
+
+Build at: 2025-11-10T23:59:33.479Z - Hash: a2a354a88619e022 - Time: 35526ms
+
+Warning: bundle initial exceeded maximum budget. Budget 1.00 MB was not met by 197.47 kB with a total of 1.19 MB.
+
+
+Compilacion completada correctamente. 
+[INICIO] 11/11/2025  0:59:33,67 - Lanzamiento del servidor 
+[FIN] 11/11/2025  0:59:33,71 - Script completado 
+------------------------------------------------------------ 

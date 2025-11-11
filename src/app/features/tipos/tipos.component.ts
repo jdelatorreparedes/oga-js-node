@@ -6,7 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { firstValueFrom } from 'rxjs';
 import { ActivosService } from '../../services/activos.service';
-import { CsvService } from '../../services/csv.service';
+import { ExcelService } from '../../services/excel.service';
 import { SnackbarService } from '../../shared/services/snackbar.service';
 import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
 import { TipoActivo } from '../../models/tipo-activo.model';
@@ -24,7 +24,7 @@ import { AuthService } from '../../core/services/auth.service';
   styleUrls: ['./tipos.component.scss']
 })
 export class TiposComponent implements OnInit, AfterViewInit {
-  displayedColumns: string[] = ['nombre', 'acciones'];
+  displayedColumns: string[] = ['nombre', 'codificacion', 'acciones'];
   dataSource = new MatTableDataSource<TipoActivo>([]);
   filtroBusqueda = '';
 
@@ -33,7 +33,7 @@ export class TiposComponent implements OnInit, AfterViewInit {
 
   constructor(
     private activosService: ActivosService,
-    private csvService: CsvService,
+    private excelService: ExcelService,
     private dialog: MatDialog,
     private snackbarService: SnackbarService,
     public authService: AuthService
@@ -47,7 +47,10 @@ export class TiposComponent implements OnInit, AfterViewInit {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.dataSource.filterPredicate = (data: TipoActivo, filter: string) => {
-      return data.nombre.toLowerCase().includes(filter.toLowerCase());
+      const searchText = filter.toLowerCase();
+      const nombreMatch = data.nombre.toLowerCase().includes(searchText);
+      const codificacionMatch = data.codificacion ? data.codificacion.toLowerCase().includes(searchText) : false;
+      return nombreMatch || codificacionMatch;
     };
   }
 
@@ -84,7 +87,8 @@ export class TiposComponent implements OnInit, AfterViewInit {
 
   abrirModalAnadir(): void {
     const dialogRef = this.dialog.open(TipoDialogComponent, {
-      width: '500px',
+      width: '550px',
+      maxWidth: '90vw',
       data: { tipo: null }
     });
 
@@ -97,7 +101,8 @@ export class TiposComponent implements OnInit, AfterViewInit {
 
   abrirModalEditar(tipo: TipoActivo): void {
     const dialogRef = this.dialog.open(TipoDialogComponent, {
-      width: '500px',
+      width: '550px',
+      maxWidth: '90vw',
       data: { tipo: { ...tipo } }
     });
 
@@ -111,6 +116,7 @@ export class TiposComponent implements OnInit, AfterViewInit {
   eliminar(tipo: TipoActivo): void {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '400px',
+      maxWidth: '90vw',
       data: {
         title: 'Eliminar Tipo',
         message: `¿Está seguro de eliminar el tipo "${tipo.nombre}"?`,
@@ -137,32 +143,34 @@ export class TiposComponent implements OnInit, AfterViewInit {
     });
   }
 
-  exportarCsv(): void {
-    const headers = ['Nombre'];
+  exportarExcel(): void {
+    const headers = ['Nombre', 'Codificación'];
     const data = this.dataSource.filteredData.map(t => ({
-      'Nombre': t.nombre
+      'Nombre': t.nombre,
+      'Codificación': t.codificacion || ''
     }));
-    this.csvService.exportToCsv(data, 'tipos-activos.csv', headers);
-    this.snackbarService.showSuccess('CSV exportado correctamente');
+    this.excelService.exportToExcel(data, 'tipos-activos', headers);
+    this.snackbarService.showSuccess('Excel exportado correctamente');
   }
 
-  importarCsv(): void {
+  importarExcel(): void {
     const input = document.createElement('input');
     input.type = 'file';
-    input.accept = '.csv';
+    input.accept = '.xlsx,.xls';
     input.onchange = (event: any) => {
       const file = event.target.files[0];
       if (file) {
-        this.csvService.importFromCsv(file).then((data) => {
+        this.excelService.importFromExcel(file).then((data) => {
           // Obtener tipos existentes para comparar
           this.activosService.getTipos().subscribe({
             next: (tiposExistentes) => {
               const promesas: Promise<any>[] = [];
               let tiposDuplicados = 0;
               
-              // Procesar cada fila del CSV
+              // Procesar cada fila del Excel
               data.forEach((row: any) => {
                 const nombre = (row['Nombre'] || row['nombre'] || '').trim();
+                const codificacion = (row['Codificación'] || row['Codificacion'] || row['codificacion'] || '').trim();
                 if (!nombre) return; // Saltar filas vacías
                 
                 // Verificar si el tipo ya existe (sin distinguir mayúsculas, minúsculas o acentos)
@@ -172,7 +180,10 @@ export class TiposComponent implements OnInit, AfterViewInit {
                 
                 if (!existe) {
                   // Crear nuevo tipo y agregar la promesa al array
-                  const nuevoTipo: TipoActivo = { nombre };
+                  const nuevoTipo: TipoActivo = { 
+                    nombre,
+                    codificacion: codificacion || undefined
+                  };
                   const promesa = firstValueFrom(this.activosService.addTipo(nuevoTipo));
                   promesas.push(promesa);
                 } else {
@@ -188,7 +199,7 @@ export class TiposComponent implements OnInit, AfterViewInit {
                 } else if (tiposDuplicados > 0) {
                   this.snackbarService.showInfo('No se encontraron tipos nuevos para importar');
                 } else {
-                  this.snackbarService.showInfo('El archivo CSV está vacío o no contiene datos válidos');
+                  this.snackbarService.showInfo('El archivo Excel está vacío o no contiene datos válidos');
                 }
                 this.cargarTipos();
               }).catch((error) => {
@@ -203,8 +214,8 @@ export class TiposComponent implements OnInit, AfterViewInit {
             }
           });
         }).catch((error) => {
-          console.error('Error al importar CSV:', error);
-          this.snackbarService.showError('Error al importar el archivo CSV');
+          console.error('Error al importar Excel:', error);
+          this.snackbarService.showError('Error al importar el archivo Excel');
         });
       }
     };

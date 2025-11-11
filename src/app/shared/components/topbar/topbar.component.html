@@ -3,40 +3,11 @@
     <mat-icon>menu</mat-icon>
   </button>
   
-  <div class="logo-container">
-    <svg class="logo-icon" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
-      <!-- Engranaje/Forma principal con protrusiones redondeadas -->
-      <path d="M 30 10 
-              Q 35 8 40 10
-              L 45 15
-              Q 47 20 45 25
-              L 50 30
-              Q 52 35 50 40
-              L 45 45
-              Q 40 47 35 45
-              L 30 50
-              Q 25 52 20 50
-              L 15 45
-              Q 13 40 15 35
-              L 10 30
-              Q 8 25 10 20
-              L 15 15
-              Q 20 8 25 10
-              Z" fill="#25282A"/>
-      <!-- Arco naranja que envuelve la parte superior-izquierda -->
-      <path d="M 30 10 
-              Q 25 12 20 15
-              Q 12 20 10 25
-              Q 8 28 10 30" 
-            stroke="#FF682E" 
-            stroke-width="5" 
-            fill="none" 
-            stroke-linecap="round"
-            stroke-linejoin="round"/>
-    </svg>
+  <!-- Logo Corporativo OGA ÓRBITA GESTIÓN DE ACTIVOS -->
+  <div class="logo-container" (click)="navigateTo('/dashboard')" style="cursor: pointer;">
     <div class="logo-text">
       <span class="logo-main">OGA</span>
-      <span class="logo-subtitle">GESTION DE ACTIVOS</span>
+      <span class="logo-claim">ÓRBITA GESTIÓN DE ACTIVOS</span>
     </div>
   </div>
   

@@ -13,7 +13,7 @@ import { SnackbarService } from '../../shared/services/snackbar.service';
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
-  version = '1.0.0';
+  version = '10.0.0';
   
   stats = [
     { label: 'Total Activos', value: '0', icon: 'inventory', color: 'primary' },

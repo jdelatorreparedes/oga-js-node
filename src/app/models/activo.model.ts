@@ -16,6 +16,7 @@ export interface Activo {
   area: string;
   responsable: string;
   fechaRevision: string;
+  fechaAlta?: string; // Fecha en que se dio de alta el activo
   estado: EstadoActivo;
   motivoBaja?: string;
 }

@@ -4,7 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivosService } from '../../services/activos.service';
-import { CsvService } from '../../services/csv.service';
+import { ExcelService } from '../../services/excel.service';
 import { SnackbarService } from '../../shared/services/snackbar.service';
 import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
 import { TipoActivo } from '../../models/tipo-activo.model';
@@ -30,7 +30,7 @@ interface ActivoConPersona extends Activo {
   styleUrls: ['./activos.component.scss']
 })
 export class ActivosComponent implements OnInit, AfterViewInit {
-  displayedColumns: string[] = ['tipo', 'codigo', 'referencia', 'descripcion', 'personaAsignada', 'estado', 'acciones'];
+  displayedColumns: string[] = ['tipo', 'codigo', 'referencia', 'descripcion', 'fechaAlta', 'personaAsignada', 'estado', 'acciones'];
   dataSource = new MatTableDataSource<ActivoConPersona>([]);
   activos: Activo[] = [];
   activosEnriquecidos: ActivoConPersona[] = [];
@@ -43,7 +43,7 @@ export class ActivosComponent implements OnInit, AfterViewInit {
 
   constructor(
     private activosService: ActivosService,
-    private csvService: CsvService,
+    private excelService: ExcelService,
     private dialog: MatDialog,
     private snackbarService: SnackbarService,
     public authService: AuthService
@@ -232,8 +232,9 @@ export class ActivosComponent implements OnInit, AfterViewInit {
 
   abrirModalAnadir(): void {
     const dialogRef = this.dialog.open(ActivoDialogComponent, {
-      width: '600px',
-      maxHeight: '90vh',
+      width: '900px',
+      maxWidth: '95vw',
+      maxHeight: '95vh',
       data: { tipos: this.tipos, activosExistentes: this.activos }
     });
 
@@ -246,8 +247,9 @@ export class ActivosComponent implements OnInit, AfterViewInit {
 
   abrirModalEditar(activo: Activo): void {
     const dialogRef = this.dialog.open(ActivoDialogComponent, {
-      width: '600px',
-      maxHeight: '90vh',
+      width: '900px',
+      maxWidth: '95vw',
+      maxHeight: '95vh',
       data: { activo: { ...activo }, tipos: this.tipos, activosExistentes: this.activos }
     });
 
@@ -261,6 +263,7 @@ export class ActivosComponent implements OnInit, AfterViewInit {
   eliminarActivo(activo: Activo): void {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '400px',
+      maxWidth: '90vw',
       data: {
         title: 'Eliminar Activo',
         message: `¿Está seguro de eliminar el activo "${activo.codigo}"?`,
@@ -298,6 +301,7 @@ export class ActivosComponent implements OnInit, AfterViewInit {
 
     const dialogRef = this.dialog.open(AsignarDialogComponent, {
       width: '500px',
+      maxWidth: '90vw',
       data: { activo: activo }
     });
 
@@ -316,6 +320,7 @@ export class ActivosComponent implements OnInit, AfterViewInit {
 
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '400px',
+      maxWidth: '90vw',
       data: {
         title: 'Devolver Activo',
         message: `¿Está seguro de devolver el activo "${activo.codigo}"?`,
@@ -352,7 +357,8 @@ export class ActivosComponent implements OnInit, AfterViewInit {
     }
 
     const dialogRef = this.dialog.open(BajaDialogComponent, {
-      width: '500px',
+      width: '600px',
+      maxWidth: '95vw',
       data: { activo: activo }
     });
 
@@ -363,7 +369,7 @@ export class ActivosComponent implements OnInit, AfterViewInit {
     });
   }
 
-  exportarCsv(): void {
+  exportarExcel(): void {
     const headers = ['Código', 'Referencia', 'Descripción', 'Marca', 'Detalles', 'Tipo', 'Área', 'Responsable', 'Estado', 'Persona Asignada'];
     const data = this.dataSource.filteredData.map(activo => ({
       'Código': activo.codigo,
@@ -377,20 +383,20 @@ export class ActivosComponent implements OnInit, AfterViewInit {
       'Estado': activo.estado,
       'Persona Asignada': activo.personaAsignada || ''
     }));
-    this.csvService.exportToCsv(data, 'activos.csv', headers);
-    this.snackbarService.showSuccess('CSV exportado correctamente');
+    this.excelService.exportToExcel(data, 'activos', headers);
+    this.snackbarService.showSuccess('Excel exportado correctamente');
   }
 
-  importarCsv(): void {
+  importarExcel(): void {
     const input = document.createElement('input');
     input.type = 'file';
-    input.accept = '.csv';
+    input.accept = '.xlsx,.xls';
     input.onchange = (event: any) => {
       const file = event.target.files[0];
       if (file) {
-        this.csvService.importFromCsv(file).then((data) => {
+        this.excelService.importFromExcel(file).then((data) => {
           if (data.length === 0) {
-            this.snackbarService.showInfo('El archivo CSV está vacío o no contiene datos válidos');
+            this.snackbarService.showInfo('El archivo Excel está vacío o no contiene datos válidos');
             return;
           }
 
@@ -405,7 +411,7 @@ export class ActivosComponent implements OnInit, AfterViewInit {
                   let activosDuplicados = 0;
                   let errores = 0;
 
-                  // Procesar cada fila del CSV
+                  // Procesar cada fila del Excel
                   data.forEach((row: any) => {
                     // Mapear los nombres de columnas (pueden variar por codificación)
                     // Intentar diferentes variantes de los nombres de columnas
@@ -475,7 +481,7 @@ export class ActivosComponent implements OnInit, AfterViewInit {
                     } else if (errores > 0) {
                       this.snackbarService.showError(`Error al importar ${errores} activo(s)`);
                     } else {
-                      this.snackbarService.showInfo('El archivo CSV está vacío o no contiene datos válidos');
+                      this.snackbarService.showInfo('El archivo Excel está vacío o no contiene datos válidos');
                     }
                     this.cargarActivos();
                   }).catch((error) => {
@@ -496,8 +502,8 @@ export class ActivosComponent implements OnInit, AfterViewInit {
             }
           });
         }).catch((error) => {
-          console.error('Error al importar CSV:', error);
-          this.snackbarService.showError('Error al importar el archivo CSV');
+          console.error('Error al importar Excel:', error);
+          this.snackbarService.showError('Error al importar el archivo Excel');
         });
       }
     };

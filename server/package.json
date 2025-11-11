@@ -1,6 +1,6 @@
 {
   "name": "gestion-activos-server",
-  "version": "1.0.0",
+  "version": "10.0.0",
   "description": "Servidor backend para gestión de activos",
   "main": "server.js",
   "scripts": {

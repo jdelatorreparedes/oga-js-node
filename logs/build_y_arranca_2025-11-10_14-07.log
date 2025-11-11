@@ -1,8 +1,0 @@
------------------------------------------------------------- 
-[INICIO] 10/11/2025 14:07:40,26 - Compilacion frontend 
-
-> gestion-activos@1.0.0 build
-> ng build
-
-- Generating browser application bundles (phase: setup)...
-^C^C¨Desea terminar el trabajo por lotes (S/N)? 

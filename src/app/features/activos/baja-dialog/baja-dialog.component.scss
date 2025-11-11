@@ -1,7 +1,12 @@
 mat-dialog-content {
-  min-width: 450px;
+  min-width: 550px;
   padding: 20px 24px;
-  font-size: 14px; // Asegurar tamaño legible
+  font-size: 14px;
+  
+  @media (max-width: 768px) {
+    min-width: auto;
+    padding: 16px;
+  }
 }
 
 .full-width {
@@ -16,11 +21,24 @@ mat-dialog-actions {
 
 ::ng-deep {
   .mat-mdc-form-field {
-    font-size: 14px; // Asegurar tamaño legible
+    font-size: 14px;
   }
+  
   .mat-mdc-dialog-title {
-    font-size: 20px; // Título del diálogo
+    font-size: 20px;
     font-weight: 600;
+    padding: 20px 24px 16px;
+    margin: 0;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+    line-height: 1.4;
+  }
+  
+  .mat-mdc-dialog-container {
+    .mat-mdc-dialog-title {
+      max-width: 100%;
+    }
   }
 }
 

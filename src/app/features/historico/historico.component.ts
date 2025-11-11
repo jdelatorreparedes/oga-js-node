@@ -3,7 +3,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { ActivosService } from '../../services/activos.service';
-import { CsvService } from '../../services/csv.service';
+import { ExcelService } from '../../services/excel.service';
 import { SnackbarService } from '../../shared/services/snackbar.service';
 import { HistoricoAsignacion } from '../../models/historico.model';
 import { Activo } from '../../models/activo.model';
@@ -45,7 +45,7 @@ export class HistoricoComponent implements OnInit, AfterViewInit {
 
   constructor(
     private activosService: ActivosService,
-    private csvService: CsvService,
+    private excelService: ExcelService,
     private snackbarService: SnackbarService
   ) {}
 
@@ -150,7 +150,7 @@ export class HistoricoComponent implements OnInit, AfterViewInit {
     };
   }
 
-  exportarCsv(): void {
+  exportarExcel(): void {
     const headers = ['Código Activo', 'Referencia Activo', 'Tipo Activo', 'Persona Asignada', 'Fecha Asignación', 'Fecha Prevista Devolución', 'Fecha Real Devolución'];
     const data = this.dataSource.filteredData.map(h => ({
       'Código Activo': h.activoCodigo || '',
@@ -161,7 +161,7 @@ export class HistoricoComponent implements OnInit, AfterViewInit {
       'Fecha Prevista Devolución': h.fechaDevolucionPrevista ? new Date(h.fechaDevolucionPrevista).toLocaleDateString() : '',
       'Fecha Real Devolución': h.fechaDevolucion ? new Date(h.fechaDevolucion).toLocaleDateString() : ''
     }));
-    this.csvService.exportToCsv(data, 'historico_asignaciones.csv', headers);
-    this.snackbarService.showSuccess('CSV exportado correctamente');
+    this.excelService.exportToExcel(data, 'historico_asignaciones', headers);
+    this.snackbarService.showSuccess('Excel exportado correctamente');
   }
 }

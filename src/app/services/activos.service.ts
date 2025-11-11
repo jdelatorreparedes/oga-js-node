@@ -95,6 +95,16 @@ export class ActivosService {
   }
 
   /**
+   * Obtiene el siguiente código sugerido para un tipo de activo
+   * 
+   * @param tipoId - ID del tipo de activo
+   * @returns Observable que emite el código sugerido
+   */
+  getSiguienteCodigo(tipoId: number): Observable<{ codigo: string }> {
+    return this.dbService.getSiguienteCodigo(tipoId);
+  }
+
+  /**
    * Crea un nuevo activo
    * 
    * El activo se crea automáticamente con estado "Disponible".

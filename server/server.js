@@ -6,8 +6,8 @@
  * Incluye funcionalidades de autenticación JWT, gestión de usuarios, tipos de activos,
  * activos, asignaciones e histórico.
  * 
- * @author Sistema de Gestión de Activos
- * @version 1.0.0
+ * @author Sistema de Gestión de Activos - ÓRBITA GESTIÓN DE ACTIVOS
+ * @version 10.0.0
  * @since 1.0.0
  */
 
@@ -103,8 +103,30 @@ async function initDatabase() {
     // Tabla de tipos
     await pool.query(`CREATE TABLE IF NOT EXISTS tipos (
       id SERIAL PRIMARY KEY,
-      nombre VARCHAR(255) NOT NULL
+      nombre VARCHAR(255) NOT NULL,
+      codificacion VARCHAR(50) UNIQUE
     )`);
+
+    // Migración: Añadir campo codificacion si no existe
+    try {
+      await pool.query(`ALTER TABLE tipos ADD COLUMN IF NOT EXISTS codificacion VARCHAR(50)`);
+      // Añadir constraint UNIQUE si no existe
+      await pool.query(`
+        DO $$ 
+        BEGIN
+          IF NOT EXISTS (
+            SELECT 1 FROM pg_constraint WHERE conname = 'tipos_codificacion_key'
+          ) THEN
+            ALTER TABLE tipos ADD CONSTRAINT tipos_codificacion_key UNIQUE (codificacion);
+          END IF;
+        END $$;
+      `);
+    } catch (err) {
+      // Ignorar errores si la columna ya existe
+      if (!err.message.includes('duplicate column') && !err.message.includes('already exists')) {
+        console.warn('Advertencia al añadir columna codificacion:', err.message);
+      }
+    }
 
     // Tabla de activos
     await pool.query(`CREATE TABLE IF NOT EXISTS activos (
@@ -131,6 +153,16 @@ async function initDatabase() {
       // Ignorar errores si las columnas ya existen
       if (!err.message.includes('duplicate column')) {
         console.warn('Advertencia al añadir columnas marca/detalles:', err.message);
+      }
+    }
+
+    // Migración: Añadir campo fechaAlta si no existe
+    try {
+      await pool.query(`ALTER TABLE activos ADD COLUMN IF NOT EXISTS "fechaAlta" VARCHAR(255)`);
+    } catch (err) {
+      // Ignorar errores si la columna ya existe
+      if (!err.message.includes('duplicate column') && !err.message.includes('already exists')) {
+        console.warn('Advertencia al añadir columna fechaAlta:', err.message);
       }
     }
 
@@ -317,19 +349,38 @@ app.get('/api/tipos', authenticateToken, async (req, res) => {
  *               $ref: '#/components/schemas/Error'
  */
 app.post('/api/tipos', authenticateToken, authorizeRoles('Administrador', 'Usuario'), async (req, res) => {
-  const { nombre } = req.body;
+  const { nombre, codificacion } = req.body;
   if (!nombre) {
     return res.status(400).json({ error: 'El nombre es requerido' });
   }
   
+  // Validar que codificacion sea único si se proporciona
+  if (codificacion) {
+    try {
+      const checkResult = await pool.query('SELECT id FROM tipos WHERE codificacion = $1', [codificacion.trim()]);
+      if (checkResult.rows.length > 0) {
+        return res.status(400).json({ error: 'Ya existe un tipo con esta codificación' });
+      }
+    } catch (err) {
+      logger.database('POST tipos - CHECK codificacion', err, 'SELECT id FROM tipos WHERE codificacion = $1');
+    }
+  }
+  
   try {
-    const result = await pool.query('INSERT INTO tipos (nombre) VALUES ($1) RETURNING id', [nombre]);
-    const id = result.rows[0].id;
-    logger.info('Tipo de activo creado', { id, nombre });
-    res.json({ id, nombre });
+    const result = await pool.query(
+      'INSERT INTO tipos (nombre, codificacion) VALUES ($1, $2) RETURNING id, nombre, codificacion', 
+      [nombre, codificacion ? codificacion.trim() : null]
+    );
+    const tipo = result.rows[0];
+    logger.info('Tipo de activo creado', { id: tipo.id, nombre, codificacion: tipo.codificacion });
+    res.json(tipo);
   } catch (err) {
-    logger.database('POST tipos - INSERT', err, `INSERT INTO tipos (nombre) VALUES ($1)`);
-    res.status(500).json({ error: err.message });
+    if (err.code === '23505' || err.message.includes('UNIQUE constraint')) {
+      res.status(400).json({ error: 'Ya existe un tipo con esta codificación' });
+    } else {
+      logger.database('POST tipos - INSERT', err, `INSERT INTO tipos (nombre, codificacion) VALUES ($1, $2)`);
+      res.status(500).json({ error: err.message });
+    }
   }
 });
 
@@ -375,22 +426,41 @@ app.post('/api/tipos', authenticateToken, authorizeRoles('Administrador', 'Usuar
  *         description: Error del servidor
  */
 app.put('/api/tipos/:id', authenticateToken, authorizeRoles('Administrador', 'Usuario'), async (req, res) => {
-  const { nombre } = req.body;
+  const { nombre, codificacion } = req.body;
   const { id } = req.params;
   
   if (!nombre) {
     return res.status(400).json({ error: 'El nombre es requerido' });
   }
   
+  // Validar que codificacion sea único si se proporciona (excluyendo el tipo actual)
+  if (codificacion) {
+    try {
+      const checkResult = await pool.query('SELECT id FROM tipos WHERE codificacion = $1 AND id != $2', [codificacion.trim(), id]);
+      if (checkResult.rows.length > 0) {
+        return res.status(400).json({ error: 'Ya existe otro tipo con esta codificación' });
+      }
+    } catch (err) {
+      logger.database('PUT tipos - CHECK codificacion', err, 'SELECT id FROM tipos WHERE codificacion = $1 AND id != $2');
+    }
+  }
+  
   try {
-    const result = await pool.query('UPDATE tipos SET nombre = $1 WHERE id = $2', [nombre, id]);
+    const result = await pool.query(
+      'UPDATE tipos SET nombre = $1, codificacion = $2 WHERE id = $3 RETURNING id, nombre, codificacion', 
+      [nombre, codificacion ? codificacion.trim() : null, id]
+    );
     if (result.rowCount === 0) {
       res.status(404).json({ error: 'Tipo no encontrado' });
     } else {
-      res.json({ id: parseInt(id), nombre });
+      res.json(result.rows[0]);
     }
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    if (err.code === '23505' || err.message.includes('UNIQUE constraint')) {
+      res.status(400).json({ error: 'Ya existe otro tipo con esta codificación' });
+    } else {
+      res.status(500).json({ error: err.message });
+    }
   }
 });
 
@@ -450,6 +520,120 @@ app.delete('/api/tipos/:id', authenticateToken, authorizeRoles('Administrador'),
 });
 
 // ========== ACTIVOS ==========
+
+/**
+ * Genera un código único para un activo basado en la codificación del tipo
+ * Formato: CODIFICACION + número de 4 dígitos (0001, 0002, etc.)
+ * 
+ * @async
+ * @function generarCodigoActivo
+ * @param {number} tipoId - ID del tipo de activo
+ * @returns {Promise<string>} Código generado
+ * @throws {Error} Si el tipo no tiene codificación o hay un error
+ */
+async function generarCodigoActivo(tipoId) {
+  try {
+    // Obtener la codificación del tipo
+    const tipoResult = await pool.query('SELECT codificacion FROM tipos WHERE id = $1', [tipoId]);
+    
+    if (tipoResult.rows.length === 0) {
+      throw new Error('Tipo de activo no encontrado');
+    }
+    
+    const codificacion = tipoResult.rows[0].codificacion;
+    
+    if (!codificacion) {
+      throw new Error('El tipo de activo no tiene codificación definida');
+    }
+    
+    // Buscar el último código con esta codificación
+    const codigoPattern = codificacion + '%';
+    const ultimoCodigoResult = await pool.query(
+      `SELECT codigo FROM activos 
+       WHERE codigo LIKE $1 
+       ORDER BY codigo DESC 
+       LIMIT 1`,
+      [codigoPattern]
+    );
+    
+    let siguienteNumero = 1;
+    
+    if (ultimoCodigoResult.rows.length > 0) {
+      const ultimoCodigo = ultimoCodigoResult.rows[0].codigo;
+      // Extraer el número del código (ej: "LAP-0023" -> 23)
+      const match = ultimoCodigo.match(new RegExp(`^${codificacion.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(\\d+)$`));
+      if (match && match[1]) {
+        siguienteNumero = parseInt(match[1], 10) + 1;
+      }
+    }
+    
+    // Formatear el número con 4 dígitos
+    const numeroFormateado = siguienteNumero.toString().padStart(4, '0');
+    const nuevoCodigo = codificacion + numeroFormateado;
+    
+    // Verificar que el código no exista (por si acaso)
+    const existeResult = await pool.query('SELECT id FROM activos WHERE codigo = $1', [nuevoCodigo]);
+    if (existeResult.rows.length > 0) {
+      // Si existe, intentar con el siguiente número
+      siguienteNumero++;
+      const numeroFormateado2 = siguienteNumero.toString().padStart(4, '0');
+      return codificacion + numeroFormateado2;
+    }
+    
+    return nuevoCodigo;
+  } catch (err) {
+    logger.error('Error al generar código de activo', err);
+    throw err;
+  }
+}
+
+/**
+ * @swagger
+ * /api/activos/siguiente-codigo/{tipoId}:
+ *   get:
+ *     summary: Obtener el siguiente código sugerido para un tipo de activo
+ *     tags: [Activos]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: tipoId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del tipo de activo
+ *     responses:
+ *       200:
+ *         description: Código sugerido
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 codigo:
+ *                   type: string
+ *                   example: LAP-0001
+ *       400:
+ *         description: El tipo no tiene codificación definida
+ *       404:
+ *         description: Tipo no encontrado
+ *       500:
+ *         description: Error del servidor
+ */
+app.get('/api/activos/siguiente-codigo/:tipoId', authenticateToken, authorizeRoles('Administrador', 'Usuario'), async (req, res) => {
+  const { tipoId } = req.params;
+  
+  try {
+    const codigo = await generarCodigoActivo(parseInt(tipoId));
+    res.json({ codigo });
+  } catch (err) {
+    if (err.message.includes('no encontrado')) {
+      res.status(404).json({ error: err.message });
+    } else {
+      res.status(400).json({ error: err.message });
+    }
+  }
+});
 
 /**
  * @swagger
@@ -602,18 +786,93 @@ app.get('/api/activos/:id', authenticateToken, async (req, res) => {
  *       500:
  *         description: Error del servidor
  */
-app.post('/api/activos', authenticateToken, authorizeRoles('Administrador', 'Usuario'), async (req, res) => {
-  const { tipoId, codigo, referencia, descripcion, marca, detalles, area, responsable, fechaRevision } = req.body;
+/**
+ * Valida el formato del código de activo
+ * @param {string} codigo - Código a validar
+ * @param {string} codificacion - Codificación del tipo de activo
+ * @returns {Object} - { valido: boolean, mensaje?: string }
+ */
+function validarFormatoCodigo(codigo, codificacion) {
+  if (!codigo || !codigo.trim()) {
+    return { valido: true }; // Si está vacío, se generará automáticamente
+  }
+
+  const codigoTrimmed = codigo.trim();
   
-  if (!tipoId || !codigo || !referencia) {
-    return res.status(400).json({ error: 'Los campos tipoId, codigo y referencia son requeridos' });
+  // Si no hay codificación, no validar formato
+  if (!codificacion || codificacion.trim() === '') {
+    return { valido: true };
+  }
+
+  const codificacionTrimmed = codificacion.trim();
+  
+  // Validar que el código empiece con la codificación
+  if (!codigoTrimmed.startsWith(codificacionTrimmed)) {
+    return { 
+      valido: false, 
+      mensaje: `El código debe empezar con "${codificacionTrimmed}" (codificación del tipo seleccionado)` 
+    };
+  }
+
+  // Validar que después de la codificación haya exactamente 4 dígitos
+  const parteNumerica = codigoTrimmed.substring(codificacionTrimmed.length);
+  const regexCuatroDigitos = /^\d{4}$/;
+  
+  if (!regexCuatroDigitos.test(parteNumerica)) {
+    return { 
+      valido: false, 
+      mensaje: `El código debe tener exactamente 4 dígitos después de "${codificacionTrimmed}". Formato esperado: ${codificacionTrimmed}0001` 
+    };
+  }
+
+  return { valido: true };
+}
+
+app.post('/api/activos', authenticateToken, authorizeRoles('Administrador', 'Usuario'), async (req, res) => {
+  const { tipoId, codigo, referencia, descripcion, marca, detalles, area, responsable, fechaRevision, fechaAlta } = req.body;
+  
+  if (!tipoId) {
+    return res.status(400).json({ error: 'El campo tipoId es requerido' });
   }
   
   try {
+    // Obtener el tipo para validar codificación
+    const tipoResult = await pool.query('SELECT codificacion FROM tipos WHERE id = $1', [tipoId]);
+    if (tipoResult.rows.length === 0) {
+      return res.status(400).json({ error: 'Tipo de activo no encontrado' });
+    }
+    
+    const codificacion = tipoResult.rows[0].codificacion;
+    let codigoFinal = codigo;
+    
+    // Si no se proporciona código, generarlo automáticamente
+    if (!codigoFinal || codigoFinal.trim() === '') {
+      try {
+        codigoFinal = await generarCodigoActivo(tipoId);
+      } catch (genErr) {
+        return res.status(400).json({ error: genErr.message || 'Error al generar código automático. Asegúrese de que el tipo tenga codificación definida.' });
+      }
+    } else {
+      // Validar formato del código si se proporciona manualmente
+      const validacionFormato = validarFormatoCodigo(codigoFinal, codificacion);
+      if (!validacionFormato.valido) {
+        return res.status(400).json({ error: validacionFormato.mensaje || 'El formato del código no es válido' });
+      }
+    }
+    
+    // Validar que el código no exista
+    const codigoExiste = await pool.query('SELECT id FROM activos WHERE codigo = $1', [codigoFinal.trim()]);
+    if (codigoExiste.rows.length > 0) {
+      return res.status(400).json({ error: 'El código ya existe' });
+    }
+    
+    // Si no se proporciona fechaAlta, usar la fecha actual
+    const fechaAltaFinal = fechaAlta || new Date().toISOString().split('T')[0];
+    
     const insertResult = await pool.query(
-      `INSERT INTO activos ("tipoId", codigo, referencia, descripcion, marca, detalles, area, responsable, "fechaRevision", estado) 
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, 'Disponible') RETURNING id`,
-      [tipoId, codigo, referencia, descripcion || '', marca || '', detalles || '', area || '', responsable || '', fechaRevision || '']
+      `INSERT INTO activos ("tipoId", codigo, referencia, descripcion, marca, detalles, area, responsable, "fechaRevision", "fechaAlta", estado) 
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, 'Disponible') RETURNING id`,
+      [tipoId, codigoFinal.trim(), referencia || '', descripcion || '', marca || '', detalles || '', area || '', responsable || '', fechaRevision || '', fechaAltaFinal]
     );
     
     const id = insertResult.rows[0].id;
@@ -676,6 +935,28 @@ app.put('/api/activos/:id', authenticateToken, authorizeRoles('Administrador', '
   const { tipoId, codigo, referencia, descripcion, marca, detalles, area, responsable, fechaRevision, estado, motivoBaja } = req.body;
   
   try {
+    // Obtener el tipo para validar codificación si se proporciona código
+    if (codigo && tipoId) {
+      const tipoResult = await pool.query('SELECT codificacion FROM tipos WHERE id = $1', [tipoId]);
+      if (tipoResult.rows.length === 0) {
+        return res.status(400).json({ error: 'Tipo de activo no encontrado' });
+      }
+      
+      const codificacion = tipoResult.rows[0].codificacion;
+      const validacionFormato = validarFormatoCodigo(codigo, codificacion);
+      if (!validacionFormato.valido) {
+        return res.status(400).json({ error: validacionFormato.mensaje || 'El formato del código no es válido' });
+      }
+    }
+    
+    // Validar que el código no exista en otro activo
+    if (codigo) {
+      const codigoExiste = await pool.query('SELECT id FROM activos WHERE codigo = $1 AND id != $2', [codigo.trim(), id]);
+      if (codigoExiste.rows.length > 0) {
+        return res.status(400).json({ error: 'El código ya existe en otro activo' });
+      }
+    }
+    
     const updateResult = await pool.query(
       `UPDATE activos 
        SET "tipoId" = $1, codigo = $2, referencia = $3, descripcion = $4, marca = $5, detalles = $6, area = $7, responsable = $8, "fechaRevision" = $9, estado = $10, "motivoBaja" = $11
@@ -731,33 +1012,50 @@ app.put('/api/activos/:id', authenticateToken, authorizeRoles('Administrador', '
 app.delete('/api/activos/:id', authenticateToken, authorizeRoles('Administrador'), async (req, res) => {
   const { id } = req.params;
   
+  const client = await pool.connect();
+  
   try {
+    await client.query('BEGIN');
+    
     // Verificar si el activo existe
-    const activoResult = await pool.query('SELECT * FROM activos WHERE id = $1', [id]);
+    const activoResult = await client.query('SELECT * FROM activos WHERE id = $1', [id]);
     
     if (activoResult.rows.length === 0) {
+      await client.query('ROLLBACK');
       return res.status(404).json({ error: 'Activo no encontrado' });
     }
     
     // Verificar si el activo está asignado
     if (activoResult.rows[0].estado === 'Asignado') {
+      await client.query('ROLLBACK');
       return res.status(400).json({ error: 'No se puede eliminar un activo que está asignado. Primero debe devolverse.' });
     }
     
     // Eliminar primero los registros relacionados en histórico
-    await pool.query('DELETE FROM historico WHERE "activoId" = $1', [id]);
+    await client.query('DELETE FROM historico WHERE "activoId" = $1', [id]);
     
     // Luego eliminar el activo
-    const result = await pool.query('DELETE FROM activos WHERE id = $1', [id]);
+    const result = await client.query('DELETE FROM activos WHERE id = $1', [id]);
     
     if (result.rowCount === 0) {
+      await client.query('ROLLBACK');
       res.status(404).json({ error: 'Activo no encontrado' });
     } else {
+      await client.query('COMMIT');
       res.json({ message: 'Activo eliminado correctamente' });
     }
   } catch (err) {
+    await client.query('ROLLBACK');
     logger.database('DELETE activos', err, `DELETE FROM activos WHERE id = $1`);
-    res.status(500).json({ error: err.message });
+    
+    // Mensajes de error más específicos
+    if (err.code === '23503' || err.message.includes('foreign key')) {
+      res.status(400).json({ error: 'No se puede eliminar el activo porque tiene registros relacionados en el histórico' });
+    } else {
+      res.status(500).json({ error: err.message || 'Error al eliminar el activo' });
+    }
+  } finally {
+    client.release();
   }
 });
 
@@ -1679,6 +1977,11 @@ app.post('/api/auth/login', async (req, res) => {
         return res.status(401).json({ error: 'Usuario o contraseña incorrectos' });
       }
       
+      // Verificar si la contraseña es la por defecto "orbita"
+      // Si la contraseña ingresada es "orbita" y coincide con el hash, requiere cambio
+      const defaultPassword = 'orbita';
+      const requiresPasswordChange = (password === defaultPassword);
+      
       // Generar JWT
       const jwtSecret = process.env.JWT_SECRET || 'fallback-secret-key-change-in-production';
       const jwtExpiresIn = process.env.JWT_EXPIRES_IN || '24h';
@@ -1695,13 +1998,14 @@ app.post('/api/auth/login', async (req, res) => {
       
       // Retornar usuario sin contraseña
       const { password: _, ...userWithoutPassword } = user;
-      logger.info('Login exitoso', { username, userId: user.id, rol: user.rol });
+      logger.info('Login exitoso', { username, userId: user.id, rol: user.rol, requiresPasswordChange });
       res.json({
         usuario: {
           ...userWithoutPassword,
           activo: userWithoutPassword.activo === 1
         },
-        token
+        token,
+        requiresPasswordChange: requiresPasswordChange
       });
     });
   } catch (err) {

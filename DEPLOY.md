@@ -1,6 +1,10 @@
-# Guía de Despliegue - Acceso desde Otros Ordenadores
+# Guía de Despliegue - OGA ÓRBITA GESTIÓN DE ACTIVOS
 
-## Configuración para Acceso en Red Local
+## Configuración para Acceso desde Otros Ordenadores
+
+### Versión: 10.0.0
+
+Esta guía explica cómo desplegar la aplicación para que sea accesible desde otros ordenadores en la red local o desde internet.
 
 ### Paso 1: Compilar el Frontend
 
@@ -35,7 +39,9 @@ O manualmente:
 
 **Nota:** La aplicación está configurada para usar la IP fija `192.168.1.133`. Si necesitas cambiarla, edita:
 - `server/server.js` (línea con `FIXED_IP`)
-- `src/environments/environment.prod.ts` (línea con `apiUrl`)
+- `src/app/core/services/api.service.ts` (URL de la API)
+
+**Importante:** Asegúrate de tener PostgreSQL configurado y las variables de entorno en `server/.env` antes de desplegar.
 
 **Opción A - Usando npm (requiere cross-env):**
 
@@ -81,9 +87,9 @@ Si necesitas cambiar la IP fija, edita dos archivos:
 const FIXED_IP = 'TU_NUEVA_IP';
 ```
 
-2. **`src/environments/environment.prod.ts`** - Cambia la URL de la API:
+2. **`src/app/core/services/api.service.ts`** - Cambia la URL de la API:
 ```typescript
-apiUrl: 'http://TU_NUEVA_IP:3000/api'
+private apiUrl = 'http://TU_NUEVA_IP:3000/api';
 ```
 
 Luego recompila el frontend:
@@ -118,8 +124,12 @@ Verifica que la URL en `environment.prod.ts` sea correcta. Si el frontend y back
 
 ## Notas Importantes
 
-- Todos los usuarios compartirán la misma base de datos SQLite
-- La base de datos se encuentra en `server/activos.db`
-- Para producción real, considera usar PostgreSQL o MySQL en lugar de SQLite
+- Todos los usuarios compartirán la misma base de datos PostgreSQL
+- La base de datos debe estar configurada en `server/.env`
 - El servidor debe estar corriendo para que otros ordenadores puedan acceder
+- Para producción, considera:
+  - Usar HTTPS con certificado SSL
+  - Configurar un servidor de base de datos dedicado
+  - Implementar backups automáticos
+  - Configurar un firewall adecuado
 

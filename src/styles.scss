@@ -1,32 +1,56 @@
-/* Importar fuente Montserrat */
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+/* ============================================
+   TIPOGRAFÍAS CORPORATIVAS - ÓRBITA INGENIERÍA
+   ============================================ */
+
+/* Importar fuente Montserrat (Bold para títulos principales) */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
+
+/* Importar fuente Bw Modélica (Medium para claim "INGENIERÍA") */
+/* Nota: Si Bw Modélica no está disponible, se usará una fuente similar */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Oswald:wght@400;500;600&display=swap');
 
 /* Importar tema de Angular Material */
 @import '@angular/material/prebuilt-themes/indigo-pink.css';
 
-/* Variables de color - Identidad Órbita Ingeniería */
+/* ============================================
+   VARIABLES DE COLOR - PANTONE CORPORATIVOS
+   ============================================ */
 :root {
-  /* Colores primarios */
-  --orbita-primary: #25282A;
-  --orbita-accent: #FF682E;
+  /* Colores PANTONE corporativos */
+  --orbita-pantone-426c: #1D1D1B;        /* PANTONE 426C - Gris oscuro principal */
+  --orbita-pantone-165c: #FF6A13;         /* PANTONE 165C - Naranja vibrante */
+  --orbita-pantone-black-6c: #000000;     /* PANTONE Black 6C - Negro profundo */
+  --orbita-pantone-white: #FFFFFF;        /* PANTONE 000 C WHITE - Blanco puro */
+  
+  /* Colores primarios (mapeo de PANTONE) */
+  --orbita-primary: var(--orbita-pantone-426c);
+  --orbita-accent: var(--orbita-pantone-165c);
+  --orbita-black: var(--orbita-pantone-black-6c);
+  --orbita-white: var(--orbita-pantone-white);
   
   /* Fondos */
   --orbita-bg-app: #F7F8FA;
-  --orbita-bg-card: #FFFFFF;
+  --orbita-bg-card: var(--orbita-white);
   
   /* Textos */
-  --orbita-text-primary: #25282A;
+  --orbita-text-primary: var(--orbita-pantone-426c);
   --orbita-text-secondary: #6B7280;
-  --orbita-text-white: #FFFFFF;
+  --orbita-text-white: var(--orbita-white);
   
   /* Bordes */
   --orbita-border: #E5E7EB;
   
-  /* Sombras */
-  --orbita-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --orbita-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-  --orbita-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --orbita-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  /* Sombras sutiles y profesionales */
+  --orbita-shadow-sm: 0 1px 2px 0 rgba(29, 29, 27, 0.05);
+  --orbita-shadow: 0 1px 3px 0 rgba(29, 29, 27, 0.1), 0 1px 2px 0 rgba(29, 29, 27, 0.06);
+  --orbita-shadow-md: 0 4px 6px -1px rgba(29, 29, 27, 0.1), 0 2px 4px -1px rgba(29, 29, 27, 0.06);
+  --orbita-shadow-lg: 0 10px 15px -3px rgba(29, 29, 27, 0.1), 0 4px 6px -2px rgba(29, 29, 27, 0.05);
+  --orbita-shadow-xl: 0 20px 25px -5px rgba(29, 29, 27, 0.1), 0 10px 10px -5px rgba(29, 29, 27, 0.04);
+  
+  /* Transiciones suaves */
+  --orbita-transition-fast: 0.15s ease-in-out;
+  --orbita-transition: 0.3s ease-in-out;
+  --orbita-transition-slow: 0.5s ease-in-out;
 }
 
 /* Reset y configuración global */
@@ -42,6 +66,9 @@ html, body {
   padding: 0;
 }
 
+/* ============================================
+   CONFIGURACIÓN GLOBAL DEL BODY
+   ============================================ */
 body {
   font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   font-weight: 400;
@@ -50,23 +77,63 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-size: 16px; // Tamaño base más legible
+  font-size: 16px;
 }
 
-/* Tipografías */
+/* ============================================
+   TIPOGRAFÍAS CORPORATIVAS
+   ============================================ */
+
+/* Títulos principales - Montserrat Bold */
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Montserrat', sans-serif;
-  font-weight: 600;
+  font-weight: 700; /* Bold según especificación */
   color: var(--orbita-text-primary);
   line-height: 1.2;
+  letter-spacing: -0.02em; /* Espaciado más ajustado para profesionalismo */
 }
 
-h1 { font-weight: 700; font-size: 28px; } // Título principal legible
-h2 { font-weight: 700; font-size: 24px; } // Subtítulos legibles
-h3 { font-weight: 600; font-size: 20px; }
-h4 { font-weight: 600; font-size: 18px; }
-h5 { font-weight: 600; font-size: 16px; }
-h6 { font-weight: 600; font-size: 16px; } // Mínimo 16px para legibilidad
+h1 { 
+  font-weight: 700; 
+  font-size: 32px; 
+  letter-spacing: -0.03em;
+}
+
+h2 { 
+  font-weight: 700; 
+  font-size: 28px; 
+  letter-spacing: -0.02em;
+}
+
+h3 { 
+  font-weight: 700; 
+  font-size: 24px; 
+}
+
+h4 { 
+  font-weight: 700; 
+  font-size: 20px; 
+}
+
+h5 { 
+  font-weight: 700; 
+  font-size: 18px; 
+}
+
+h6 { 
+  font-weight: 700; 
+  font-size: 16px; 
+}
+
+/* Claim "INGENIERÍA" - Bw Modélica Medium (mayúsculas) */
+/* Nota: Usamos Oswald como alternativa similar si Bw Modélica no está disponible */
+.claim-text,
+.logo-claim {
+  font-family: 'Oswald', 'Playfair Display', sans-serif;
+  font-weight: 500; /* Medium */
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
 
 /* Utilidades */
 .text-primary { color: var(--orbita-text-primary); }
@@ -87,7 +154,9 @@ h6 { font-weight: 600; font-size: 16px; } // Mínimo 16px para legibilidad
   margin-bottom: 16px;
 }
 
-/* Override Material Theme Colors */
+/* ============================================
+   OVERRIDE MATERIAL THEME COLORS
+   ============================================ */
 .mat-primary {
   background-color: var(--orbita-primary) !important;
   color: var(--orbita-text-white) !important;
@@ -98,54 +167,113 @@ h6 { font-weight: 600; font-size: 16px; } // Mínimo 16px para legibilidad
   color: var(--orbita-text-white) !important;
 }
 
-/* Accesibilidad - Contraste AA */
+/* ============================================
+   ANIMACIONES SUTILES Y TRANSICIONES
+   ============================================ */
+
+/* Transiciones globales para elementos interactivos */
+a, button, .mat-mdc-button, .mat-mdc-raised-button, .mat-mdc-icon-button {
+  transition: all var(--orbita-transition-fast) !important;
+}
+
+/* Hover suave en botones */
+.mat-mdc-button:hover,
+.mat-mdc-raised-button:hover,
+.mat-mdc-icon-button:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--orbita-shadow-md) !important;
+}
+
+/* Animación de entrada para cards */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card,
+.mat-mdc-card {
+  animation: fadeInUp var(--orbita-transition) ease-out;
+}
+
+/* Animación de hover en cards */
+.mat-mdc-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--orbita-shadow-lg) !important;
+  transition: all var(--orbita-transition) !important;
+}
+
+/* ============================================
+   ACCESIBILIDAD - CONTRASTE AA
+   ============================================ */
 a:focus,
 button:focus,
 input:focus,
 select:focus,
 textarea:focus {
-  outline: 2px solid var(--orbita-accent);
+  outline: 2px solid var(--orbita-pantone-165c);
   outline-offset: 2px;
+  border-radius: 2px;
 }
 
-/* Scrollbar personalizado */
+/* ============================================
+   SCROLLBAR PERSONALIZADO CORPORATIVO
+   ============================================ */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-track {
   background: var(--orbita-bg-app);
+  border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb {
   background: var(--orbita-text-secondary);
-  border-radius: 4px;
+  border-radius: 5px;
+  border: 2px solid var(--orbita-bg-app);
+  transition: background var(--orbita-transition-fast);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--orbita-text-primary);
+  background: var(--orbita-pantone-165c);
 }
 
-/* Snackbar personalizado */
+/* ============================================
+   SNACKBAR PERSONALIZADO CORPORATIVO
+   ============================================ */
 .success-snackbar {
   background-color: #10b981 !important;
-  color: white !important;
+  color: var(--orbita-white) !important;
+  font-family: 'Montserrat', sans-serif !important;
+  font-weight: 500 !important;
 }
 
 .error-snackbar {
   background-color: #ef4444 !important;
-  color: white !important;
+  color: var(--orbita-white) !important;
+  font-family: 'Montserrat', sans-serif !important;
+  font-weight: 500 !important;
 }
 
 .info-snackbar {
-  background-color: #3b82f6 !important;
-  color: white !important;
+  background-color: var(--orbita-pantone-165c) !important;
+  color: var(--orbita-white) !important;
+  font-family: 'Montserrat', sans-serif !important;
+  font-weight: 500 !important;
 }
 
 .warning-snackbar {
   background-color: #f59e0b !important;
-  color: white !important;
+  color: var(--orbita-white) !important;
+  font-family: 'Montserrat', sans-serif !important;
+  font-weight: 500 !important;
 }
 
 /* Estilos para Angular Material - Tamaños legibles */
@@ -375,10 +503,10 @@ textarea:focus {
     }
     
     &.mdc-list-item--selected:not(.mdc-list-item--disabled) {
-      background-color: rgba(255, 104, 46, 0.1) !important; // Fondo naranja claro cuando está seleccionado
+      background-color: rgba(255, 106, 19, 0.1) !important; // Fondo naranja claro cuando está seleccionado
       
       .mdc-list-item__primary-text {
-        color: #FF682E !important; // Texto naranja cuando está seleccionado
+        color: var(--orbita-pantone-165c) !important; // Texto naranja corporativo cuando está seleccionado
       }
     }
   }
@@ -446,8 +574,8 @@ textarea:focus {
     
     // Fecha seleccionada
     &.mat-calendar-body-selected {
-      background-color: #FF682E !important; // Fondo naranja
-      color: #FFFFFF !important; // Texto blanco
+      background-color: var(--orbita-pantone-165c) !important; // Fondo naranja corporativo
+      color: var(--orbita-white) !important; // Texto blanco
       
       .mat-calendar-body-cell-content {
         color: #FFFFFF !important; // Texto blanco
@@ -456,7 +584,7 @@ textarea:focus {
     
     // Fecha hoy (current date)
     &.mat-calendar-body-today:not(.mat-calendar-body-selected) {
-      border-color: #FF682E !important; // Borde naranja
+      border-color: var(--orbita-pantone-165c) !important; // Borde naranja corporativo
       color: #25282A !important; // Texto oscuro
       
       .mat-calendar-body-cell-content {

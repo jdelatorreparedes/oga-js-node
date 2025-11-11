@@ -1,13 +1,23 @@
+/* ============================================
+   TOPBAR - BARRA SUPERIOR CORPORATIVA
+   ============================================ */
 .topbar {
-  background-color: var(--orbita-bg-card);
+  background-color: var(--orbita-white);
   color: var(--orbita-text-primary);
-  box-shadow: var(--orbita-shadow-sm);
-  padding: 0 16px;
-  height: 64px;
-  position: sticky; // sticky funciona como relative para elementos hijos
+  box-shadow: var(--orbita-shadow);
+  padding: 0 24px;
+  height: 72px; /* Altura aumentada para mayor presencia */
+  position: sticky;
   top: 0;
   z-index: 100;
-  font-size: 14px; // Tamaño de texto legible
+  font-size: 14px;
+  border-bottom: 1px solid var(--orbita-border);
+  transition: box-shadow var(--orbita-transition);
+  
+  /* Sombra más pronunciada al hacer scroll (si se implementa) */
+  &.scrolled {
+    box-shadow: var(--orbita-shadow-md);
+  }
 }
 
 .menu-toggle {
@@ -20,18 +30,21 @@
   }
 }
 
+/* ============================================
+   LOGO CORPORATIVO - OGA ÓRBITA GESTIÓN DE ACTIVOS
+   ============================================ */
 .logo-container {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   margin-left: 8px;
-  margin-right: 16px;
+  margin-right: 24px;
   height: 100%;
+  padding: 8px 0;
+  transition: transform var(--orbita-transition-fast);
   
-  .logo-icon {
-    width: 40px;
-    height: 40px;
-    flex-shrink: 0;
+  &:hover {
+    transform: scale(1.02);
   }
   
   .logo-text {
@@ -41,21 +54,24 @@
     justify-content: center;
     
     .logo-main {
-      font-size: 20px;
-      font-weight: 700;
-      color: #25282A;
-      letter-spacing: 1px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 24px;
+      font-weight: 700; /* Bold según especificación */
+      color: var(--orbita-pantone-426c);
+      letter-spacing: 0.5px;
       line-height: 1;
+      margin-bottom: 2px;
     }
     
-    .logo-subtitle {
-      font-size: 8px;
+    .logo-claim {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px;
       font-weight: 500;
-      color: #25282A;
-      letter-spacing: 0.3px;
+      color: var(--orbita-pantone-426c);
+      letter-spacing: 0.1em;
       text-transform: uppercase;
       line-height: 1.2;
-      margin-top: 1px;
+      opacity: 0.85;
     }
   }
 }
@@ -70,6 +86,9 @@
   white-space: nowrap;
 }
 
+/* ============================================
+   NAVEGACIÓN SUPERIOR
+   ============================================ */
 .topbar-nav {
   position: absolute;
   left: 50%;
@@ -81,28 +100,50 @@
   .nav-button {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     color: var(--orbita-text-secondary);
+    font-family: 'Montserrat', sans-serif;
     font-size: 14px;
-    font-weight: 500;
-    padding: 8px 12px;
-    border-radius: 4px;
-    transition: all 0.2s ease;
+    font-weight: 600;
+    padding: 10px 16px;
+    border-radius: 6px;
+    transition: all var(--orbita-transition-fast);
+    position: relative;
     
     mat-icon {
       font-size: 18px;
       width: 18px;
       height: 18px;
+      transition: transform var(--orbita-transition-fast);
     }
     
     &:hover {
       background-color: var(--orbita-bg-app);
       color: var(--orbita-text-primary);
+      transform: translateY(-1px);
+      
+      mat-icon {
+        transform: scale(1.1);
+      }
     }
     
     &.active {
-      color: var(--orbita-accent);
-      background-color: rgba(255, 104, 46, 0.1);
+      color: var(--orbita-pantone-165c);
+      background-color: rgba(255, 106, 19, 0.1);
+      font-weight: 700;
+      
+      /* Indicador visual sutil */
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60%;
+        height: 3px;
+        background-color: var(--orbita-pantone-165c);
+        border-radius: 2px 2px 0 0;
+      }
     }
   }
 }
@@ -130,6 +171,140 @@
       font-size: 24px; // Tamaño de icono apropiado
       width: 24px;
       height: 24px;
+    }
+  }
+}
+
+/* ============================================
+   ESTILOS RESPONSIVE - MÓVIL
+   ============================================ */
+@media (max-width: 960px) {
+  .topbar {
+    padding: 0 12px;
+    flex-wrap: wrap;
+    min-height: 72px;
+    height: auto;
+    
+    .logo-container {
+      margin-right: 12px;
+      flex-shrink: 0;
+      
+      .logo-text {
+        .logo-main {
+          font-size: 20px;
+        }
+        
+        .logo-claim {
+          font-size: 8px;
+        }
+      }
+    }
+    
+    .topbar-nav {
+      position: static;
+      transform: none;
+      left: auto;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-left: 8px;
+      flex: 1;
+      min-width: 0;
+      justify-content: flex-start;
+      
+      .nav-button {
+        padding: 8px 12px;
+        font-size: 12px;
+        min-width: 44px; // Tamaño mínimo táctil
+        flex-shrink: 0;
+        
+        mat-icon {
+          font-size: 18px;
+          width: 18px;
+          height: 18px;
+          margin-right: 4px;
+        }
+        
+        span {
+          display: none; // Ocultar texto en móvil, solo mostrar iconos
+        }
+      }
+    }
+    
+    .spacer {
+      display: none; // Ocultar spacer en móvil
+    }
+    
+    .topbar-actions {
+      gap: 8px;
+      flex-shrink: 0;
+      margin-left: auto;
+      
+      .user-info {
+        display: none; // Ocultar info de usuario en móvil
+      }
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .topbar {
+    height: auto;
+    min-height: 64px;
+    padding: 8px;
+    flex-direction: column;
+    align-items: stretch;
+    
+    .menu-toggle {
+      position: absolute;
+      left: 8px;
+      top: 8px;
+      z-index: 10;
+    }
+    
+    .logo-container {
+      margin-left: 48px; // Espacio para el botón de menú
+      margin-right: 8px;
+      margin-bottom: 8px;
+      
+      .logo-text {
+        .logo-main {
+          font-size: 18px;
+        }
+        
+        .logo-claim {
+          font-size: 7px;
+        }
+      }
+    }
+    
+    .topbar-nav {
+      width: 100%;
+      margin-left: 0;
+      margin-top: 8px;
+      gap: 4px;
+      justify-content: space-between;
+      
+      .nav-button {
+        padding: 8px;
+        font-size: 11px;
+        flex: 1;
+        min-width: 0;
+        max-width: calc(20% - 4px); // Distribuir uniformemente
+        
+        mat-icon {
+          font-size: 20px;
+          width: 20px;
+          height: 20px;
+          margin-right: 0;
+        }
+      }
+    }
+    
+    .topbar-actions {
+      position: absolute;
+      right: 8px;
+      top: 8px;
+      margin-left: 0;
     }
   }
 }
